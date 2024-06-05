@@ -16,7 +16,9 @@ class Sudoku {
 
     // probiere für jede Annahme das Sudoku neu zu lösen
 
-    loese() {
-        return; // erste Lösung oder null
+    solutions() {
+        return []; // erste Lösung oder null
     }
+
 }
+module.exports = Sudoku;
