@@ -21,6 +21,13 @@
 - Ben
 - Jasim
 
+#### Frontend Elemente
+
+- select box zum Auswählen der verfügbaren Sudokus / und laden vom backend
+- button "start solving"
+- Anzeigen für: wieviele Lösungen gefunden / wieviele Lösungen max / wieviele Steps gegangen / maximale rekursionstiefe
+- button für "watch me solve" der mit setInterval die allSteps wegshiftet
+
 ### Alg. Amin / Andreas
 
 - Amin
