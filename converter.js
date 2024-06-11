@@ -1,14 +1,9 @@
-const fs = require('fs');
+const fs = require('fs').promises;
 const path = require('path');
 
-function sudoku2js(fileName) {
-    let obj = {};
-    fs.readFile(fileName, 'utf8', (err, data) => {
-        if (err) {
-            console.error('Fehler beim Lesen der Datei:', err);
-            return;
-        }
-
+async function sudoku2js(fileName) {
+    try {
+        const data = await fs.readFile(fileName, 'utf8');
         const lines = data.split('\n');
         const jsonObject = {};
 
@@ -18,9 +13,17 @@ function sudoku2js(fileName) {
                 jsonObject[key] = value;
             }
         });
-        obj = JSON.parse(JSON.stringify(jsonObject))
-    });
-    return obj;
+
+        return jsonObject;
+    } catch (err) {
+        console.error('Fehler beim Lesen der Datei:', err);
+        return {};
+    }
 }
-console.log(sudoku2js(__dirname + "\\input.txt"))
+
+(async () => {
+    const result = await sudoku2js(path.join(__dirname, 'input.txt'));
+    console.log(result);
+})();
+
 module.exports = sudoku2js;
