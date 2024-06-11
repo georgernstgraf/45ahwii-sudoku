@@ -1,12 +1,11 @@
 class Sudoku {
     #recursion_depth;
-    #maxSolutions;
-    #data;
-    #foundSolutions;
-    constructor(jsn, foundSolutions, maxSolutions) {
-        this.#data = jsn;
-        this.#foundSolutions = commonSolutions;
-        this.#maxSolutions = maxSolutions;
+    _maxSolutions;
+    _data;
+    _foundSolutions;
+    constructor({ data, foundSolutions, recursionDepth, maxSolutions }) {
+        this.data = data;
+        this.state = state;
     }
 
     solveObvious() {
@@ -26,11 +25,10 @@ class Sudoku {
     }
     makeAssumptions() {
         // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Iterators_and_generators
-        for (sudoku of this) {
+        for (sudoku of this.assumptions()) {  // iterator bauen!!
             sudoku.solve();
-            if (this.#foundSolutions <= this.#maxSolutions) break;
+            if (this.state.foundSolutions <= this.state.maxSolutions) break;
         }
-        // this.#data is now: {c1: [1,2,4]}
         return;
     }
 
@@ -41,9 +39,16 @@ class Sudoku {
         if (this.solveObvious()) {
             console.log(`obvious did sth at depth ${this.#recursion_depth}`);
         }
-
-        return this.#foundSolutions;
+        this.makeAssumptions();
     }
 
 }
-module.exports = Sudoku;
+class Cell {
+    constructor(position, value, recursionDepth, isAssumption) {
+        this.position = position; // zb "a1"
+        this.value = value; // zb 9
+        this.recursionDepth = recursionDepth; // beginnend mit 0
+        this.isAssumption = isAssumption;
+    }
+}
+export { Sudoku, Cell };
