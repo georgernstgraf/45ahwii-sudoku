@@ -4,13 +4,21 @@ h1 {
 }
 
 html {
-    background-color: #000000;
+    background-color: #ffffff;
 }
 .grid-container {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-    background-color: #ffffff;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    background-color: #000000;
+    padding: 10px;
+    border-radius: 10px;
+}
+.subgrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    background-color: #000000;
     padding: 10px;
     border-radius: 10px;
 }
