@@ -1,21 +1,17 @@
-const colNames = ["a", "b", "c", "d", "e", "f", "g", "h", "i"];
-const rowNames = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
-
 class Sudoku {
     #recursion_depth;
     _maxSolutions;
     _data;
     _foundSolutions;
-    constructor({ data, recursionDepth, state }) {
+    constructor({ data, foundSolutions, recursionDepth, maxSolutions }) {
         this.data = data;
-        this.recursionDepth = recursionDepth;
         this.state = state;
     }
 
     solveObvious() {
         // so lange obviuos felder befüllen bis sich nix mehr tut
         const state1 = this.getStateCopy();
-        // a) massimo  // TODO fehler in schleife
+        // a) massimo
         for (doMassimos(); isUnEqualWith(state1); doMassimos()) { }
         // b) amin / andreas
         const state2 = this.getStateCopy();
