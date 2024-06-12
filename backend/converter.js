@@ -21,9 +21,32 @@ async function sudoku2js(fileName) {
     }
 }
 
+async function readFilesFromDirectory(directoryPath) {
+    try {
+        const files = await fs.readdir(directoryPath);
+        const results = [];
+
+        for (const file of files) {
+            const filePath = path.join(directoryPath, file);
+            const fileStats = await fs.stat(filePath);
+
+            if (fileStats.isFile() && path.extname(filePath) === '.txt') {
+                const result = await sudoku2js(filePath);
+                results.push(result);
+            }
+        }
+
+        return results;
+    } catch (err) {
+        console.error('Fehler beim Lesen des Verzeichnisses:', err);
+        return [];
+    }
+}
+
 (async () => {
-    const result = await sudoku2js(path.join(__dirname, 'input.txt'));
-    console.log(result);
+    const directoryPath = path.join(__dirname, '../beispiele'); 
+    const results = await readFilesFromDirectory(directoryPath);
+    console.log(results);
 })();
 
 module.exports = sudoku2js;
