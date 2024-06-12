@@ -1,4 +1,16 @@
+
+
+
 ## Folgendes ist zu beachten:
+
+
+
+## JSON 
+
+0 = leer
+
+ob horizontal oder vertikal sollte egal sein
+
 ### Der Code
 
 1.
