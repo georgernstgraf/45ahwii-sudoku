@@ -11,6 +11,8 @@ const options = {
     }
 };
 
+const directoryPath = '../beispiele';
+
 const fetchSudoku = async () => {
     try {
         const response = await fetch(url, options);
@@ -19,7 +21,7 @@ const fetchSudoku = async () => {
         const unsolvedSudoku = result[0].unsolvedSudoku;
 
         // Read the directory for existing files
-        const files = fs.readdirSync('.');
+        const files = fs.readdirSync(directoryPath);
         const jsonFiles = files.filter(file => file.startsWith('unsolvedSudoku') && file.endsWith('.json'));
 
         // Parse their numbers and find the highest one
@@ -28,9 +30,9 @@ const fetchSudoku = async () => {
 
         // Write the new file with a number that's one higher
         const newFile = `unsolvedSudoku${maxNumber + 1}.json`;
-        fs.writeFileSync(newFile, JSON.stringify(unsolvedSudoku, null, 2));
+        fs.writeFileSync(path.join(directoryPath, newFile), JSON.stringify(unsolvedSudoku, null, 2));
 
-        console.log(`The file has been saved as ${newFile}!`);
+        console.log(`The file has been saved as ${newFile} in the directory ${directoryPath}!`);
     } catch (error) {
         console.error('There was a problem with the fetch operation:', error);
     }
