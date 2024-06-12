@@ -27,6 +27,9 @@
 - button "start solving"
 - Anzeigen für: wieviele Lösungen gefunden / wieviele Lösungen max / wieviele Steps gegangen / maximale rekursionstiefe
 - button für "watch me solve" der mit setInterval die allSteps wegshiftet
+- botton für Anzeige der Lösung(en)
+- ein schöner 9x9 grid für die Anzeige eines Sudokus (Objekt-Instanz)
+- css Klassen für die Einfärbung
 
 ### Alg. Amin / Andreas
 
