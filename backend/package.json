@@ -1,0 +1,16 @@
+{
+  "name": "sudoku-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "node --inspect --watch app.js"
+  },
+  "keywords": [],
+  "author": "Georg Graf (SPG) <grafg@spengergasse.at>",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
