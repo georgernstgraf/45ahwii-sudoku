@@ -1,6 +1,7 @@
 h1 {
     text-align: center;
-    color: #00fff0;
+    color: #ffffff;
+    background-color: #000000;
 }
 
 html {
@@ -28,4 +29,31 @@ html {
     padding: 20px;
     font-size: 30px;
     text-align: center;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+button {
+    text-align: center;
+    font-size: 100%;
+    margin-right: 10px;
+    color: #ffffff;
+    background-color: black;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.output {
+    text-align: center;
+    font-size: 100%;
+    margin-right: 10px;
+    color: #ffffff;
+    background-color: black;
+    padding: 10px;
+    border-radius: 10px;
 }
