@@ -7,7 +7,7 @@ class Sudoku {
     _data;
     _foundSolutions;
     constructor({ data, recursionDepth, state }) {
-        this.data = data;
+        this.grid = new Grid(data);
         this.recursionDepth = recursionDepth;
         this.state = state;
     }
@@ -55,4 +55,29 @@ class Cell {
         this.isAssumption = isAssumption;
     }
 }
-export { Sudoku, Cell };
+class Grid {
+    constructor(obj) {
+        const data = {};
+        Object.assign(data, obj);
+        this.data = data;
+        if (!this.isValid()) {
+            throw new Error("Invalid grid");
+        }
+    }
+    getCell(position) {
+        return this.data[position];
+    }
+    setCell(position, value) {
+        if (!value instanceof Grid) {
+            throw new Error("Value must be an instance of Grid");
+        }
+        this.data[position] = value;
+    }
+    allEmptyCellNames() { // TODO #8
+    }
+    isFull() {
+        return this.allEmptyCellNames().length === 0;
+    }
+    isValid() { }
+}
+export { Sudoku, Cell, colNames, rowNames, Grid };
