@@ -11,15 +11,14 @@ router.get('/:fileName', async (req, res) => {
     let content;
     const response = {};
     try {
-        content = await fs.readFile(`.././beispiele/${req.params.fileName}.json`, 'utf8');
+        content = await fs.readFile(`../beispiele/${req.params.fileName}.json`, 'utf8');
         content = JSON.parse(content);
         assert(content instanceof Array, "should be an array");
         assert(content.length == 9, "need 9 rows");
         assert(content.every(row => row.length == 9), "need 9 columns");
         assert(content.every(row => row.every(cell => cell >= 0 && cell <= 9)), "number must be between 0 and 9 inclusive");
     } catch (err) {
-        res.status(404).send(err.message);
-        return;
+        return res.status(404).send(err.message);
     }
     const colNames = sudoku.colNames;
     const rowNames = sudoku.rowNames;
@@ -31,7 +30,7 @@ router.get('/:fileName', async (req, res) => {
             response[`${colNames[col]}${rowNames[row]}`] = content[row][col];
         }
     }
-    res.json(response);
+    return res.json(response);
 });
 
 module.exports = router;

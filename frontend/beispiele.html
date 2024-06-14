@@ -1,0 +1,7 @@
+<select name="beispiele" id="beispieleSelect" onchange="onSelectSudoku()">
+    <%_ beispiele.forEach(fileName=> { _%>
+        <option value="<%= fileName.url _%>">
+            <%= fileName.name _%>
+        </option>
+        <%_ }) %>
+</select>

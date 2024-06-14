@@ -80,4 +80,7 @@ class Grid {
     }
     isValid() { }
 }
+if (typeof window != 'undefined') {
+    Object.assign(window, { Sudoku, Cell, colNames, rowNames, Grid });
+};
 export { Sudoku, Cell, colNames, rowNames, Grid };

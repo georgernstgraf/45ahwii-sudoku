@@ -1,14 +1,20 @@
 'use strict';
+const path = require('path');
 const express = require('express');
 const beispieleJSON = require('./lib/beispieleJSON-router.js');
+const beispieleList = require('./lib/beispieleList-router.js');
 
 // Create the express app
 const app = express();
-
+app.set('view engine', 'html');
+app.engine('html', require('ejs').renderFile);
+app.set('views', path.join(__dirname, '../frontend/'));
 // Routes and middleware
 // app.use(/* ... */)
 // app.get(/* ... */)
 app.use('/beispieleJSON', beispieleJSON);
+// app.use('/beispieleTXT', beispieleTXT);
+app.use('/beispiele', beispieleList);
 app.use("", express.static('../frontend'));
 // Error handlers als Letzte
 app.use(function fourOhFourHandler(req, res) {
