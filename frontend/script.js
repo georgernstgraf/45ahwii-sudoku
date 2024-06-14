@@ -15,7 +15,12 @@ function resetState() {
 };
 function fetchSudoku(url) {
     fetch(url)
-        .then((obj) => obj.json())
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(response.statusText);
+            }
+            return response.json();
+        })
         .then((obj) => {
             resetState();
             state.sudoku = new Sudoku({ data: obj, recursionDepth: 0, state });
