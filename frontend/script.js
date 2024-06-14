@@ -14,13 +14,16 @@ function resetState() {
     );
 };
 function fetchSudoku(url) {
-    fetch(url).then((obj) => {
-        resetState();
-        state.sudoku = new Sudoku(obj, state);
-    }).catch(e => {
-        console.error(e);
-        error$.innerText = e.message;
-    });
+    fetch(url)
+        .then((obj) => obj.json())
+        .then((obj) => {
+            resetState();
+            state.sudoku = new Sudoku({ data: obj, recursionDepth: 0, state });
+        })
+        .catch(e => {
+            console.error(e);
+            error$.innerText = e.message;
+        });
 }
 // 3 - dom node refs
 const error$ = document.getElementById('error');
