@@ -10,8 +10,7 @@ function resetState() {
         maxSolutions: 7,
         allSteps: [],
         intervalId: NaN
-    }
-    );
+    });
 };
 function fetchSudoku(url) {
     fetch(url)
