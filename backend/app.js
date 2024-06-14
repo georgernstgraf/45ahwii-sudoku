@@ -1,5 +1,6 @@
 'use strict';
 const express = require('express');
+const beispieleJSON = require('./lib/beispieleJSON-router.js');
 
 // Create the express app
 const app = express();
@@ -7,6 +8,7 @@ const app = express();
 // Routes and middleware
 // app.use(/* ... */)
 // app.get(/* ... */)
+app.use('/beispieleJSON', beispieleJSON);
 app.use("", express.static('../frontend'));
 // Error handlers als Letzte
 app.use(function fourOhFourHandler(req, res) {

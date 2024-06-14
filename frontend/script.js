@@ -1,4 +1,4 @@
-import { Sudoku, Cell } from './sudoku.js';
+import { Sudoku, Cell } from './sudoku.mjs';
 
 // do whatever you like with the solutions
 window.Sudoku = Sudoku;

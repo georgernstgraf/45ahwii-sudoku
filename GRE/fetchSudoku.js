@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 import fs from 'fs';
 import path from 'path';
 
-const url = 'https://a-randomizer-data-api.p.rapidapi.com/api/random/sudokus?count=1&difficultyLevel=1';
+const url = 'https://a-randomizer-data-api.p.rapidapi.com/api/random/sudokus?count=1&difficultyLevel=5';
 const options = {
     method: 'GET',
     headers: {
