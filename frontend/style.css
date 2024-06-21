@@ -1,9 +1,39 @@
-h1{
-
+h1 {
     text-align: center;
-    color: #00fff0;
+    color: #ffffff;
+    background-color: #000000;
 }
 
-html{
+html {
+    background-color: #ffffff;
+}
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
     background-color: #000000;
+    padding: 10px;
+    border-radius: 10px;
+}
+.subgrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    background-color: #000000;
+    padding: 10px;
+    border-radius: 10px;
+}
+.grid-items {
+    background-color: #f1f1f1;
+    border: 1px solid #000000;
+    padding: 20px;
+    font-size: 30px;
+    text-align: center;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
 }
