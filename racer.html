@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top-Down Racing Game</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        const car = {
+            x: 400,
+            y: 300,
+            width: 40,
+            height: 60,
+            angle: 0,
+            speed: 0,
+            acceleration: 0.2,
+            maxSpeed: 5,
+            rotationSpeed: 0.05
+        };
+
+        const keys = {};
+
+        document.addEventListener('keydown', (e) => {
+            keys[e.key] = true;
+        });
+
+        document.addEventListener('keyup', (e) => {
+            keys[e.key] = false;
+        });
+        
+        function drawCar() {
+            ctx.save();
+            ctx.translate(car.x, car.y);
+            ctx.rotate(car.angle);
+            ctx.fillStyle = 'red';
+            ctx.fillRect(-car.width / 2, -car.height / 2, car.width, car.height);
+            ctx.restore();
+        }
+
+        function updateCar() {
+            if (keys['ArrowUp']) {
+                car.speed += car.acceleration;
+            } else if (keys['ArrowDown']) {
+                car.speed -= car.acceleration;
+            } else {
+                car.speed *= 0.95; // Reibung
+            }
+
+            car.speed = Math.max(-car.maxSpeed, Math.min(car.speed, car.maxSpeed));
+
+            if (keys['ArrowLeft']) {
+                car.angle -= car.rotationSpeed;
+            }
+            if (keys['ArrowRight']) {
+                car.angle += car.rotationSpeed;
+            }
+
+            car.x += Math.sin(car.angle) * car.speed;
+            car.y -= Math.cos(car.angle) * car.speed;
+
+            // Einfache Kollisionserkennung mit Spielfeldgrenzen
+            car.x = Math.max(car.width / 2, Math.min(car.x, canvas.width - car.width / 2));
+            car.y = Math.max(car.height / 2, Math.min(car.y, canvas.height - car.height / 2));
+        }
+
+        function gameLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            updateCar();
+            drawCar();
+            requestAnimationFrame(gameLoop);
+        }
+
+        gameLoop();
+    </script>
+</body>
+</html>

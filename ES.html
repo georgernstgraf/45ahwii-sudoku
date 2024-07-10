@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Canvas Datenvisualisierung</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        canvas {
+            background-color: #f0f0f0;
+            margin-top: 20px;
+        }
+        #alphaValue {
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <label for="alphaSlider">Alpha-Wert: <span id="alphaValue">0.5</span></label>
+    <input type="range" id="alphaSlider" min="0" max="1" value="0.5" step="0.01">
+    <canvas id="budgetCanvas" width="800" height="400"></canvas>
+    <button id="generateDataButton">Neue Daten generieren</button>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const canvas = document.getElementById('budgetCanvas');
+            const alphaValueDisplay = document.getElementById('alphaValue');
+            const alphaSlider = document.getElementById('alphaSlider');
+            const generateDataButton = document.getElementById('generateDataButton');
+            let alpha = parseFloat(alphaSlider.value); 
+            
+            if (canvas.getContext) {
+                const ctx = canvas.getContext('2d');
+                let dataArrays = [];
+    
+                function generateData() {
+                    const newData = [];
+                    for (let j = 0; j < 12; j++) {
+                        newData.push(Math.random() * 100 + j*3);
+                    }
+                    dataArrays.push(newData);
+                }
+    
+                function calculateAverageData(dataArrays) {
+                    const length = dataArrays[0].length;
+                    const averageData = new Array(length).fill(0);
+    
+                    dataArrays.forEach(data => {
+                        data.forEach((value, index) => {
+                            averageData[index] += value / dataArrays.length;
+                        });
+                    });
+    
+                    return averageData;
+                }
+    
+                function exponentialSmoothing(data, alpha) {
+                    let smoothedData = [data[0]]; 
+                    for (let i = 1; i < data.length; i++) {
+                        smoothedData.push(alpha * data[i] + (1 - alpha) * smoothedData[i - 1]);
+                    }
+                    return smoothedData;
+                }
+    
+                function predictNextValue(smoothedData, alpha) {
+                    return smoothedData[smoothedData.length - 1];
+                }
+    
+                function lineIntersection(x1, y1, x2, y2, x3, y3, x4, y4) {
+                    const denom = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
+                    if (denom === 0) return null; // Linien sind parallel
+
+                    const ua = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) / denom;
+                    const ub = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) / denom;
+
+                    if (ua < 0 || ua > 1 || ub < 0 || ub > 1) return null;
+
+                    const x = x1 + ua * (x2 - x1);
+                    const y = y1 + ua * (y2 - y1);
+
+                    return { x, y };
+                }
+
+                function fillAreas(ctx, currentData, smoothedData) {
+                    let lastIntersection = { x: 50, y: 350 - currentData[0] * 3 };
+                    let isAbove = currentData[0] > smoothedData[0];
+
+                    for (let i = 1; i < currentData.length; i++) {
+                        const x1 = 50 + (i - 1) * 50;
+                        const x2 = 50 + i * 50;
+                        const y1Current = 350 - currentData[i - 1] * 3;
+                        const y2Current = 350 - currentData[i] * 3;
+                        const y1Smoothed = 350 - smoothedData[i - 1] * 3;
+                        const y2Smoothed = 350 - smoothedData[i] * 3;
+
+                        // Schnittpunkt berechnen
+                        const intersection = lineIntersection(
+                            x1, y1Current, x2, y2Current,
+                            x1, y1Smoothed, x2, y2Smoothed
+                        );
+
+                        if (intersection) {
+                            // Fläche füllen
+                            ctx.beginPath();
+                            ctx.moveTo(lastIntersection.x, lastIntersection.y);
+                            ctx.lineTo(x1, y1Current);
+                            ctx.lineTo(intersection.x, intersection.y);
+                            ctx.lineTo(x1, y1Smoothed);
+                            ctx.closePath();
+
+                            ctx.fillStyle = isAbove ? 'rgba(255, 255, 0, 0.3)' : 'rgba(0, 255, 0, 0.3)';
+                            ctx.fill();
+
+                            lastIntersection = intersection;
+                            isAbove = !isAbove;
+                        } else {
+                            // Wenn kein Schnittpunkt gefunden wird, einfach weitermachen
+                            ctx.beginPath();
+                            ctx.moveTo(lastIntersection.x, lastIntersection.y);
+                            ctx.lineTo(x1, y1Current);
+                            ctx.lineTo(x2, y2Current);
+                            ctx.lineTo(x2, y2Smoothed);
+                            ctx.lineTo(x1, y1Smoothed);
+                            ctx.closePath();
+
+                            ctx.fillStyle = isAbove ? 'rgba(255, 255, 0, 0.3)' : 'rgba(0, 255, 0, 0.3)';
+                            ctx.fill();
+
+                            lastIntersection = { x: x2, y: y2Smoothed };
+                        }
+                    }
+                }
+
+                function draw() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height); // Canvas löschen
+                    const averageData = calculateAverageData(dataArrays);
+                    let smoothedAverageData = exponentialSmoothing(averageData, alpha);
+                    let nextValuePrediction = predictNextValue(smoothedAverageData, alpha);
+    
+                    // Funktion zum Zeichnen von Daten
+                    function drawData(data, color, label, lineWidth = 2, includePrediction = false, isLatest = false) {
+                        ctx.beginPath();
+                        ctx.moveTo(50, 350 - data[0] * 3); // Skalierung angepasst
+    
+                        for (let i = 1; i < data.length; i++) {
+                            ctx.lineTo(50 + i * 50, 350 - data[i] * 3); // Skalierung angepasst
+                        }
+    
+                        if (includePrediction) {
+                            ctx.lineTo(50 + data.length * 50, 350 - nextValuePrediction * 3);
+                        }
+    
+                        ctx.strokeStyle = color;
+                        ctx.lineWidth = isLatest ? 4 : lineWidth; // Dickerer Strich für die neueste Datenreihe
+                        ctx.stroke();
+    
+                        ctx.fillStyle = color;
+                        ctx.fillText(label, 50, 360 + 15 * (color === 'red' ? 0 : color === 'blue' ? 1 : 2));
+                    }
+    
+                    // Flächen zwischen exponentieller Glättung und aktuellen Daten einfärben
+                    fillAreas(ctx, dataArrays[dataArrays.length - 1], smoothedAverageData);
+
+                    // Zeichnen der Daten und der exponentiellen Glättung
+                    dataArrays.forEach((data, index) => {
+                        drawData(data, 'gray', `Daten ${index + 1}`, 2, false, index === dataArrays.length - 1);
+                    });
+                    
+                    drawData(averageData, 'blue', 'Durchschnittsdaten', 4);
+                    drawData(smoothedAverageData, 'red', 'Exponentielle Glättung', 4, true); 
+                }
+    
+                generateData(); // Initiale Daten erzeugen
+                draw(); // Erstes Zeichnen
+    
+                alphaSlider.addEventListener('input', function() {
+                    alpha = parseFloat(this.value);
+                    alphaValueDisplay.textContent = alpha.toFixed(2);
+                    draw(); // Neuzeichnen bei Änderung
+                });
+    
+                generateDataButton.addEventListener('click', function() {
+                    generateData();
+                    draw(); 
+                });
+            }
+        });
+    </script>
+</body>
+</html>

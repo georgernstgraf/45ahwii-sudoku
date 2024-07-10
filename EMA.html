@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamische Budget Visualisierung mit Echtzeit-Updates und Prognosen</title>
+    <style>
+        canvas {
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="budgetChart" width="900" height="600"></canvas>
+    <script>
+        const canvas = document.getElementById('budgetChart');
+        const ctx = canvas.getContext('2d');
+        const width = 900;
+        const height = 600;
+        const margin = { top: 40, right: 180, bottom: 60, left: 60 };
+        const chartWidth = width - margin.left - margin.right;
+        const chartHeight = height - margin.top - margin.bottom;
+
+        // Simulierte Budgetdaten
+        const monthlyBudget = 3000;
+        const yearlyBudget = monthlyBudget * 12;
+        let currentDay = 0;
+        let dailyExpenses = [];
+        let emaData = [];
+
+        function generateNewDataPoint(prevValue) {
+            const change = (Math.random() - 0.5) * 40; // Zufällige Änderung zwischen -20 und 20
+            return Math.max(0, Math.min(200, prevValue + change)); // Begrenzt den Wert zwischen 0 und 200
+        }
+
+        function calculateEMA(data, period) {
+            if (data.length < 2) return data;
+            const k = 2 / (period + 1);
+            return data.reduce((ema, price, i) => {
+                ema.push(i === 0 ? price : price * k + ema[i - 1] * (1 - k));
+                return ema;
+            }, []);
+        }
+
+        function drawLine(data, color, lineWidth) {
+            ctx.beginPath();
+            ctx.strokeStyle = color;
+            ctx.lineWidth = lineWidth;
+            const minValue = Math.min(...dailyExpenses);
+            const maxValue = Math.max(...dailyExpenses);
+            for (let i = 0; i < data.length; i++) {
+                const x = margin.left + (i / 364) * chartWidth;
+                const y = margin.top + chartHeight - ((data[i] - minValue) / (maxValue - minValue)) * chartHeight;
+                if (i === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            }
+            ctx.stroke();
+        }
+
+        function fillAreas(rawData, emaData) {
+            const minValue = Math.min(...rawData);
+            const maxValue = Math.max(...rawData);
+            for (let i = 0; i < rawData.length - 1; i++) {
+                const x1 = margin.left + (i / 364) * chartWidth;
+                const x2 = margin.left + ((i + 1) / 364) * chartWidth;
+                const y1Raw = margin.top + chartHeight - ((rawData[i] - minValue) / (maxValue - minValue)) * chartHeight;
+                const y2Raw = margin.top + chartHeight - ((rawData[i+1] - minValue) / (maxValue - minValue)) * chartHeight;
+                const y1Ema = margin.top + chartHeight - ((emaData[i] - minValue) / (maxValue - minValue)) * chartHeight;
+                const y2Ema = margin.top + chartHeight - ((emaData[i+1] - minValue) / (maxValue - minValue)) * chartHeight;
+
+                ctx.beginPath();
+                ctx.moveTo(x1, y1Raw);
+                ctx.lineTo(x2, y2Raw);
+                ctx.lineTo(x2, y2Ema);
+                ctx.lineTo(x1, y1Ema);
+                ctx.closePath();
+
+                if (rawData[i] <= emaData[i]) {
+                    ctx.fillStyle = 'rgba(0, 255, 0, 0.2)';
+                } else {
+                    ctx.fillStyle = 'rgba(255, 0, 0, 0.2)';
+                }
+                ctx.fill();
+            }
+        }
+
+        function drawAxes() {
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 1;
+            
+            // X-Achse
+            ctx.beginPath();
+            ctx.moveTo(margin.left, height - margin.bottom);
+            ctx.lineTo(width - margin.right, height - margin.bottom);
+            ctx.stroke();
+
+            // Y-Achse
+            ctx.beginPath();
+            ctx.moveTo(margin.left, margin.top);
+            ctx.lineTo(margin.left, height - margin.bottom);
+            ctx.stroke();
+
+            // X-Achsen-Beschriftung (Monate)
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'top';
+            for (let i = 0; i < 12; i++) {
+                const x = margin.left + (i / 11) * chartWidth;
+                ctx.fillText(months[i], x, height - margin.bottom + 10);
+                
+                ctx.beginPath();
+                ctx.moveTo(x, margin.top);
+                ctx.lineTo(x, height - margin.bottom);
+                ctx.strokeStyle = 'rgba(0, 0, 0, 0.1)';
+                ctx.stroke();
+            }
+
+            // Y-Achsen-Beschriftung
+            const minValue = 0;
+            const maxValue = 200;
+            const step = (maxValue - minValue) / 5;
+            ctx.textAlign = 'right';
+            ctx.textBaseline = 'middle';
+            for (let i = 0; i <= 5; i++) {
+                const y = margin.top + (1 - i / 5) * chartHeight;
+                const value = minValue + i * step;
+                ctx.fillText(value.toFixed(0), margin.left - 10, y);
+                
+                ctx.beginPath();
+                ctx.moveTo(margin.left, y);
+                ctx.lineTo(width - margin.right, y);
+                ctx.strokeStyle = 'rgba(0, 0, 0, 0.1)';
+                ctx.stroke();
+            }
+        }
+
+        function calculateForecast() {
+            const currentMonthExpenses = dailyExpenses.slice(-30).reduce((a, b) => a + b, 0);
+            const averageDailyExpense = currentMonthExpenses / 30;
+            const daysLeftInMonth = 30 - (currentDay % 30);
+            const monthForecast = currentMonthExpenses + (averageDailyExpense * daysLeftInMonth);
+            
+            const currentYearExpenses = dailyExpenses.reduce((a, b) => a + b, 0);
+            const averageDailyExpenseYear = currentYearExpenses / currentDay;
+            const daysLeftInYear = 365 - currentDay;
+            const yearForecast = currentYearExpenses + (averageDailyExpenseYear * daysLeftInYear);
+            
+            return { monthForecast, yearForecast };
+        }
+
+        function drawForecast() {
+            const { monthForecast, yearForecast } = calculateForecast();
+            const forecastX = width - margin.right + 10;
+            const forecastY = margin.top + 100;
+            
+            ctx.font = 'bold 14px Arial';
+            ctx.fillStyle = 'black';
+            ctx.textAlign = 'left';
+            ctx.fillText('Prognosen:', forecastX, forecastY);
+            
+            ctx.font = '14px Arial';
+            ctx.fillText(`Monat: ${monthForecast.toFixed(2)} €`, forecastX, forecastY + 25);
+            ctx.fillText(`Jahr: ${yearForecast.toFixed(2)} €`, forecastX, forecastY + 50);
+            
+            // Visuelle Indikatoren
+            const monthIndicator = monthForecast <= monthlyBudget ? '✅' : '❌';
+            const yearIndicator = yearForecast <= yearlyBudget ? '✅' : '❌';
+            
+            ctx.fillText(`Monatsbudget: ${monthIndicator}`, forecastX, forecastY + 75);
+            ctx.fillText(`Jahresbudget: ${yearIndicator}`, forecastX, forecastY + 100);
+        }
+
+        function updateChart() {
+            currentDay++;
+            if (currentDay > 365) {
+                currentDay = 1;
+                dailyExpenses = [];
+                emaData = [];
+            }
+            
+            const newDataPoint = generateNewDataPoint(dailyExpenses.length > 0 ? dailyExpenses[dailyExpenses.length - 1] : 100);
+            dailyExpenses.push(newDataPoint);
+            emaData = calculateEMA(dailyExpenses, 14);
+            
+            ctx.clearRect(0, 0, width, height);
+            drawAxes();
+            fillAreas(dailyExpenses, emaData);
+            drawLine(dailyExpenses, 'blue', 1);
+            drawLine(emaData, 'red', 2);
+            drawForecast();
+            
+            // Legende
+            ctx.font = '14px Arial';
+            ctx.fillStyle = 'blue';
+            ctx.fillText('Tägliche Ausgaben', width - margin.right + 10, margin.top);
+            ctx.fillStyle = 'red';
+            ctx.fillText('EMA', width - margin.right + 10, margin.top + 20);
+            ctx.fillStyle = 'green';
+            ctx.fillText('Unter Budget', width - margin.right + 10, margin.top + 40);
+            ctx.fillStyle = 'red';
+            ctx.fillText('Über Budget', width - margin.right + 10, margin.top + 60);
+
+            // Aktueller Tag
+            ctx.fillStyle = 'black';
+            ctx.fillText(`Tag: ${currentDay}`, width - margin.right + 10, margin.top + 80);
+        }
+
+        // Initial chart drawing
+        updateChart();
+
+        // Update chart every 100ms
+        setInterval(updateChart, 100);
+    </script>
+</body>
+</html>
