@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modulare Aktienvisualisierung mit D3.js</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        .chart-container {
+            width: 1200px;
+            height: 800px;
+            border: 1px solid #000;
+        }
+        .line {
+            fill: none;
+            stroke-width: 2;
+        }
+        .axis-label {
+            font-size: 12px;
+        }
+        .legend-label {
+            font-size: 14px;
+        }
+        #debug {
+            margin-top: 20px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div id="chart" class="chart-container"></div>
+    <div id="debug"></div>
+    <script>
+        // Modul für Datengeneration
+        const DataGenerator = {
+            generateSyntheticData(days = 365) {
+                const data = [];
+                let price = 100;
+                const trend = 0.0002;
+                const seasonalAmplitude = 10;
+                const volatility = 0.01;
+
+                for (let day = 0; day < days; day++) {
+                    price *= (1 + trend);
+                    const seasonal = seasonalAmplitude * Math.sin(2 * Math.PI * day / 365);
+                    const random = price * volatility * (Math.random() - 0.5);
+                    price += seasonal + random;
+                    price = Math.max(price, 0.01);
+                    data.push(parseFloat(price.toFixed(2)));
+                }
+
+                return data;
+            }
+        };
+
+        // Modul für Algorithmen
+        const Algorithms = {
+            calculateEMA(data, period) {
+                if (data.length < 2) return data;
+                const k = 2 / (period + 1);
+                return data.reduce((ema, price, i) => {
+                    ema.push(i === 0 ? price : price * k + ema[i - 1] * (1 - k));
+                    return ema;
+                }, []);
+            },
+
+            linearRegression(y) {
+                const x = Array.from({length: y.length}, (_, i) => i);
+                const n = y.length;
+                const sum_x = x.reduce((a, b) => a + b, 0);
+                const sum_y = y.reduce((a, b) => a + b, 0);
+                const sum_xy = x.reduce((a, b, i) => a + b * y[i], 0);
+                const sum_xx = x.reduce((a, b) => a + b * b, 0);
+                const slope = (n * sum_xy - sum_x * sum_y) / (n * sum_xx - sum_x * sum_x);
+                const intercept = (sum_y - slope * sum_x) / n;
+                return { slope, intercept };
+            },
+
+            calculateForecasts(data, emaData) {
+                const recentPrices = data.slice(-30);
+                
+                if (recentPrices.length < 2) {
+                    return {
+                        simple: null,
+                        ema: null,
+                        regression: null
+                    };
+                }
+                
+                const simpleAverage = recentPrices.reduce((a, b) => a + b, 0) / recentPrices.length;
+                const emaValue = emaData[emaData.length - 1];
+                const { slope, intercept } = this.linearRegression(recentPrices);
+                const regressionForecast = slope * recentPrices.length + intercept;
+
+                return {
+                    simple: simpleAverage,
+                    ema: emaValue,
+                    regression: regressionForecast
+                };
+            },
+
+            updateForecastAccuracy(forecasts, actualValue, accuracy) {
+                if (actualValue === 0) return accuracy;
+                
+                Object.entries(forecasts).forEach(([method, forecast]) => {
+                    if (forecast !== null && !isNaN(forecast)) {
+                        const error = Math.abs(forecast - actualValue) / actualValue;
+                        accuracy[method].sum += error;
+                        accuracy[method].count++;
+                    }
+                });
+
+                return accuracy;
+            }
+        };
+
+        // Modul für Visualisierung
+        const Visualization = {
+            svg: null,
+            width: 1200,
+            height: 800,
+            margin: { top: 40, right: 300, bottom: 160, left: 60 },
+            chartWidth: 0,
+            chartHeight: 0,
+            xScale: null,
+            yScale: null,
+
+            init(containerId) {
+                this.chartWidth = this.width - this.margin.left - this.margin.right;
+                this.chartHeight = this.height - this.margin.top - this.margin.bottom;
+
+                this.xScale = d3.scaleLinear().range([0, this.chartWidth]);
+                this.yScale = d3.scaleLinear().range([this.chartHeight, 0]);
+
+                this.svg = d3.select(containerId)
+                    .append("svg")
+                    .attr("width", this.width)
+                    .attr("height", this.height)
+                    .append("g")
+                    .attr("transform", `translate(${this.margin.left},${this.margin.top})`);
+            },
+
+            drawLines(data, forecasts) {
+                const lineGenerator = d3.line()
+                    .x((d, i) => this.xScale(i))
+                    .y(d => this.yScale(d));
+
+                // Tatsächliche Preise
+                this.svg.append("path")
+                    .datum(data)
+                    .attr("class", "line")
+                    .attr("stroke", "blue")
+                    .attr("d", lineGenerator);
+
+                // Vorhersagelinien
+                Object.entries(forecasts).forEach(([method, forecastData]) => {
+                    const color = method === 'simple' ? 'green' : (method === 'ema' ? 'orange' : 'purple');
+                    this.svg.append("path")
+                        .datum(forecastData)
+                        .attr("class", "line")
+                        .attr("stroke", color)
+                        .attr("d", lineGenerator);
+                });
+            },
+
+            drawAxes() {
+                const xAxis = d3.axisBottom(this.xScale);
+                const yAxis = d3.axisLeft(this.yScale);
+
+                this.svg.append("g")
+                    .attr("transform", `translate(0,${this.chartHeight})`)
+                    .call(xAxis);
+
+                this.svg.append("g")
+                    .call(yAxis);
+
+                // X-Achsen-Beschriftung (Monate)
+                const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                this.svg.selectAll(".x-label")
+                    .data(months)
+                    .enter()
+                    .append("text")
+                    .attr("class", "axis-label")
+                    .attr("x", (d, i) => this.xScale(i * 30))
+                    .attr("y", this.chartHeight + 20)
+                    .attr("text-anchor", "middle")
+                    .text(d => d);
+            },
+
+            drawAccuracyStatistics(accuracy) {
+                const accuracyX = this.chartWidth + 10;
+                const accuracyY = 300;
+
+                this.svg.append("text")
+                    .attr("x", accuracyX)
+                    .attr("y", accuracyY)
+                    .attr("class", "legend-label")
+                    .attr("font-weight", "bold")
+                    .text("Prognosegenauigkeit (MAPE):");
+
+                Object.entries(accuracy).forEach(([method, acc], index) => {
+                    let mape = 'N/A';
+                    if (acc.count > 0) {
+                        mape = ((acc.sum / acc.count) * 100).toFixed(2) + '%';
+                    }
+
+                    this.svg.append("text")
+                        .attr("x", accuracyX)
+                        .attr("y", accuracyY + 25 + index * 25)
+                        .attr("class", "legend-label")
+                        .text(`${method}: ${mape}`);
+                });
+            },
+
+            drawLegend(currentIndex) {
+                const legendData = [
+                    { label: 'Tatsächliche Preise', color: 'blue' },
+                    { label: 'Einfache Prognose', color: 'green' },
+                    { label: 'EMA Prognose', color: 'orange' },
+                    { label: 'Regressions Prognose', color: 'purple' }
+                ];
+
+                const legend = this.svg.selectAll(".legend")
+                    .data(legendData)
+                    .enter()
+                    .append("g")
+                    .attr("class", "legend")
+                    .attr("transform", (d, i) => `translate(${this.chartWidth + 10},${i * 20})`);
+
+                legend.append("rect")
+                    .attr("width", 18)
+                    .attr("height", 18)
+                    .style("fill", d => d.color);
+
+                legend.append("text")
+                    .attr("x", 24)
+                    .attr("y", 9)
+                    .attr("dy", ".35em")
+                    .attr("class", "legend-label")
+                    .text(d => d.label);
+
+                this.svg.append("text")
+                    .attr("x", this.chartWidth + 10)
+                    .attr("y", 100)
+                    .attr("class", "legend-label")
+                    .text(`Tag: ${currentIndex + 1}`);
+            },
+
+            update(data, forecasts, accuracy, currentIndex) {
+                this.svg.selectAll("*").remove();
+                
+                this.xScale.domain([0, data.length - 1]);
+                this.yScale.domain([d3.min(data) * 0.9, d3.max(data) * 1.1]);
+
+                this.drawAxes();
+                this.drawLines(data, forecasts);
+                this.drawAccuracyStatistics(accuracy);
+                this.drawLegend(currentIndex);
+            }
+        };
+
+        // Hauptanwendungslogik
+        const App = {
+            currentIndex: 0,
+            stockData: [],
+            monthlyData: [],
+            emaData: [],
+            dailyForecasts: {
+                simple: [],
+                ema: [],
+                regression: []
+            },
+            forecastAccuracy: {
+                simple: { sum: 0, count: 0 },
+                ema: { sum: 0, count: 0 },
+                regression: { sum: 0, count: 0 }
+            },
+
+            init() {
+                this.stockData = DataGenerator.generateSyntheticData(730);
+                Visualization.init("#chart");
+                this.update();
+                setInterval(() => this.update(), 100);
+            },
+
+            update() {
+                if (this.currentIndex >= this.stockData.length) {
+                    console.log("Ende der Daten erreicht");
+                    return;
+                }
+
+                const newDataPoint = this.stockData[this.currentIndex];
+                this.monthlyData.push(newDataPoint);
+                this.emaData = Algorithms.calculateEMA(this.monthlyData, 14);
+
+                this.updateForecasts(newDataPoint);
+                
+                Visualization.update(this.monthlyData, this.dailyForecasts, this.forecastAccuracy, this.currentIndex);
+                this.currentIndex++;
+            },
+
+            updateForecasts(newDataPoint) {
+                if (this.currentIndex > 0) {
+                    const yesterdayForecasts = {
+                        simple: this.dailyForecasts.simple[this.dailyForecasts.simple.length - 1],
+                        ema: this.dailyForecasts.ema[this.dailyForecasts.ema.length - 1],
+                        regression: this.dailyForecasts.regression[this.dailyForecasts.regression.length - 1]
+                    };
+                    this.forecastAccuracy = Algorithms.updateForecastAccuracy(yesterdayForecasts, newDataPoint, this.forecastAccuracy);
+                }
+                
+                const todayForecasts = Algorithms.calculateForecasts(this.monthlyData, this.emaData);
+                Object.entries(todayForecasts).forEach(([method, forecast]) => {
+                    if (forecast !== null) {
+                        this.dailyForecasts[method].push(forecast);
+                    }
+                });
+            }
+        };
+
+        // Starte die Anwendung
+        App.init();
+    </script>
+</body>
+</html>

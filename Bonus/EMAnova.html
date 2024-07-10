@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamische Budget Visualisierung mit täglichen Prognosen</title>
+    <style>
+        canvas {
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="budgetChart" width="1200" height="800"></canvas>
+    <script>
+        // Konstanten und Konfiguration
+        const canvas = document.getElementById('budgetChart');
+        const ctx = canvas.getContext('2d');
+        const width = 1200;
+        const height = 800;
+        const margin = { top: 40, right: 300, bottom: 160, left: 60 };
+        const chartWidth = width - margin.left - margin.right;
+        const chartHeight = height - margin.top - margin.bottom;
+        const monthlyBudget = 3000;
+        const yearlyBudget = monthlyBudget * 12;
+
+        // Globale Variablen
+        let currentDay = 0;
+        let dailyExpenses = [];
+        let emaData = [];
+        let monthlyExpenses = Array(12).fill(0);
+        let dailyForecasts = {
+            simple: [],
+            ema: [],
+            regression: []
+        };
+        let forecastAccuracy = {
+            simple: { sum: 0, count: 0 },
+            ema: { sum: 0, count: 0 },
+            regression: { sum: 0, count: 0 }
+        };
+
+        // Hilfsfunktionen
+        function generateNewDataPoint(prevValue) {
+            const change = (Math.random() - 0.5) * 40;
+            return Math.max(0, Math.min(200, prevValue + change));
+        }
+
+        function calculateEMA(data, period) {
+            if (data.length < 2) return data;
+            const k = 2 / (period + 1);
+            return data.reduce((ema, price, i) => {
+                ema.push(i === 0 ? price : price * k + ema[i - 1] * (1 - k));
+                return ema;
+            }, []);
+        }
+
+        function linearRegression(y) {
+            const x = Array.from({length: y.length}, (_, i) => i);
+            const n = y.length;
+            const sum_x = x.reduce((a, b) => a + b, 0);
+            const sum_y = y.reduce((a, b) => a + b, 0);
+            const sum_xy = x.reduce((a, b, i) => a + b * y[i], 0);
+            const sum_xx = x.reduce((a, b) => a + b * b, 0);
+            const slope = (n * sum_xy - sum_x * sum_y) / (n * sum_xx - sum_x * sum_x);
+            const intercept = (sum_y - slope * sum_x) / n;
+            return { slope, intercept };
+        }
+
+        function calculateDailyForecasts() {
+            const recentExpenses = dailyExpenses.slice(-30);
+            
+            if (recentExpenses.length < 2) {
+                return {
+                    simple: null,
+                    ema: null,
+                    regression: null
+                };
+            }
+            
+            const simpleAverage = recentExpenses.reduce((a, b) => a + b, 0) / recentExpenses.length;
+            const emaValue = emaData[emaData.length - 1];
+            const { slope, intercept } = linearRegression(recentExpenses);
+            const regressionForecast = slope * recentExpenses.length + intercept;
+
+            return {
+                simple: simpleAverage,
+                ema: emaValue,
+                regression: regressionForecast
+            };
+        }
+
+        function updateForecastAccuracy(forecasts, actualValue) {
+            if (actualValue === 0) return; // Verhindert Division durch Null
+            
+            Object.entries(forecasts).forEach(([method, forecast]) => {
+                if (forecast !== null && !isNaN(forecast)) {
+                    const error = Math.abs(forecast - actualValue) / actualValue;
+                    forecastAccuracy[method].sum += error;
+                    forecastAccuracy[method].count++;
+                }
+            });
+        }
+
+        // Zeichenfunktionen
+        function drawLine(data, color, lineWidth) {
+            ctx.beginPath();
+            ctx.strokeStyle = color;
+            ctx.lineWidth = lineWidth;
+            const minValue = Math.min(...dailyExpenses);
+            const maxValue = Math.max(...dailyExpenses);
+            for (let i = 0; i < data.length; i++) {
+                const x = margin.left + (i / 364) * chartWidth;
+                const y = margin.top + chartHeight - ((data[i] - minValue) / (maxValue - minValue)) * chartHeight;
+                if (i === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            }
+            ctx.stroke();
+        }
+
+        function drawForecastLines() {
+            const colors = { simple: 'green', ema: 'orange', regression: 'purple' };
+            Object.entries(dailyForecasts).forEach(([method, forecasts]) => {
+                drawLine(forecasts, colors[method], 1);
+            });
+        }
+
+        function drawAxes() {
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 1;
+            
+            // X-Achse
+            ctx.beginPath();
+            ctx.moveTo(margin.left, height - margin.bottom);
+            ctx.lineTo(width - margin.right, height - margin.bottom);
+            ctx.stroke();
+
+            // Y-Achse
+            ctx.beginPath();
+            ctx.moveTo(margin.left, margin.top);
+            ctx.lineTo(margin.left, height - margin.bottom);
+            ctx.stroke();
+
+            // X-Achsen-Beschriftung (Monate)
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'top';
+            for (let i = 0; i < 12; i++) {
+                const x = margin.left + (i / 11) * chartWidth;
+                ctx.fillText(months[i], x, height - margin.bottom + 10);
+                
+                ctx.beginPath();
+                ctx.moveTo(x, margin.top);
+                ctx.lineTo(x, height - margin.bottom);
+                ctx.strokeStyle = 'rgba(0, 0, 0, 0.1)';
+                ctx.stroke();
+            }
+
+            // Y-Achsen-Beschriftung
+            const minValue = 0;
+            const maxValue = 200;
+            const step = (maxValue - minValue) / 5;
+            ctx.textAlign = 'right';
+            ctx.textBaseline = 'middle';
+            for (let i = 0; i <= 5; i++) {
+                const y = margin.top + (1 - i / 5) * chartHeight;
+                const value = minValue + i * step;
+                ctx.fillText(value.toFixed(0), margin.left - 10, y);
+                
+                ctx.beginPath();
+                ctx.moveTo(margin.left, y);
+                ctx.lineTo(width - margin.right, y);
+                ctx.strokeStyle = 'rgba(0, 0, 0, 0.1)';
+                ctx.stroke();
+            }
+        }
+
+        function drawVolumeIndicator() {
+            const barWidth = chartWidth / 12;
+            const barMaxHeight = 100;
+            const barY = height - margin.bottom + 40;
+
+            for (let i = 0; i < 12; i++) {
+                const x = margin.left + i * barWidth;
+                const fillHeight = (monthlyExpenses[i] / monthlyBudget) * barMaxHeight;
+
+                // Hintergrund
+                ctx.fillStyle = 'rgba(200, 200, 200, 0.5)';
+                ctx.fillRect(x, barY, barWidth - 5, barMaxHeight);
+
+                // Ausgaben
+                ctx.fillStyle = 'rgba(0, 0, 255, 0.7)';
+                ctx.fillRect(x, barY + barMaxHeight - fillHeight, barWidth - 5, fillHeight);
+
+                // Budget-Linie
+                ctx.beginPath();
+                ctx.moveTo(x, barY);
+                ctx.lineTo(x + barWidth - 5, barY);
+                ctx.strokeStyle = 'green';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Beschriftung
+                ctx.fillStyle = 'black';
+                ctx.textAlign = 'center';
+                ctx.fillText(`${(monthlyExpenses[i]).toFixed(0)}€`, x + barWidth / 2, barY + barMaxHeight + 15);
+            }
+        }
+
+        function drawAccuracyStatistics() {
+            const accuracyX = width - margin.right + 10;
+            const accuracyY = margin.top + 300;
+            
+            ctx.font = 'bold 14px Arial';
+            ctx.fillStyle = 'black';
+            ctx.textAlign = 'left';
+            ctx.fillText('Prognosegenauigkeit (MAPE):', accuracyX, accuracyY);
+            
+            Object.entries(forecastAccuracy).forEach(([method, accuracy], index) => {
+                let mape = 'N/A';
+                if (accuracy.count > 0) {
+                    mape = ((accuracy.sum / accuracy.count) * 100).toFixed(2) + '%';
+                }
+                
+                ctx.font = '14px Arial';
+                ctx.fillText(`${method}: ${mape}`, accuracyX, accuracyY + 25 + index * 25);
+            });
+        }
+
+        function drawLegend() {
+            ctx.font = '14px Arial';
+            ctx.fillStyle = 'blue';
+            ctx.fillText('Tatsächliche Ausgaben', width - margin.right + 10, margin.top);
+            ctx.fillStyle = 'green';
+            ctx.fillText('Einfache Prognose', width - margin.right + 10, margin.top + 20);
+            ctx.fillStyle = 'orange';
+            ctx.fillText('EMA Prognose', width - margin.right + 10, margin.top + 40);
+            ctx.fillStyle = 'purple';
+            ctx.fillText('Regressions Prognose', width - margin.right + 10, margin.top + 60);
+
+            ctx.fillStyle = 'black';
+            ctx.fillText(`Tag: ${currentDay}`, width - margin.right + 10, margin.top + 80);
+        }
+
+        // Hauptfunktion zum Aktualisieren des Diagramms
+        function updateChart() {
+            currentDay++;
+            if (currentDay > 365) {
+                resetYearlyData();
+            }
+            
+            const newDataPoint = generateNewDataPoint(dailyExpenses.length > 0 ? dailyExpenses[dailyExpenses.length - 1] : 100);
+            
+            updateForecasts(newDataPoint);
+            updateExpenses(newDataPoint);
+            
+            drawChart();
+        }
+
+        // Hilfsfunktionen für updateChart
+        function resetYearlyData() {
+            currentDay = 1;
+            dailyExpenses = [];
+            emaData = [];
+            monthlyExpenses = Array(12).fill(0);
+            dailyForecasts = { simple: [], ema: [], regression: [] };
+            forecastAccuracy = {
+                simple: { sum: 0, count: 0 },
+                ema: { sum: 0, count: 0 },
+                regression: { sum: 0, count: 0 }
+            };
+        }
+
+        function updateForecasts(newDataPoint) {
+            if (currentDay > 1) {
+                const yesterdayForecasts = {
+                    simple: dailyForecasts.simple[dailyForecasts.simple.length - 1],
+                    ema: dailyForecasts.ema[dailyForecasts.ema.length - 1],
+                    regression: dailyForecasts.regression[dailyForecasts.regression.length - 1]
+                };
+                updateForecastAccuracy(yesterdayForecasts, newDataPoint);
+            }
+            
+            const todayForecasts = calculateDailyForecasts();
+            Object.entries(todayForecasts).forEach(([method, forecast]) => {
+                if (forecast !== null) {
+                    dailyForecasts[method].push(forecast);
+                }
+            });
+        }
+
+        function updateExpenses(newDataPoint) {
+            dailyExpenses.push(newDataPoint);
+            emaData = calculateEMA(dailyExpenses, 14);
+            
+            const currentMonth = Math.floor((currentDay - 1) / 30);
+            monthlyExpenses[currentMonth] += newDataPoint;
+        }
+
+        function drawChart() {
+            ctx.clearRect(0, 0, width, height);
+            drawAxes();
+            drawLine(dailyExpenses, 'blue', 2);
+            drawForecastLines();
+            drawVolumeIndicator();
+            drawAccuracyStatistics();
+            drawLegend();
+        }
+
+        // Initialisierung und Aktualisierungsintervall
+        updateChart();
+        setInterval(updateChart, 100);
+    </script>
+</body>
+</html>
