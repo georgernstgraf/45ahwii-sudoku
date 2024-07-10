@@ -41,3 +41,12 @@ hier war mir fad und ich habe mithilfe der neuen Artifacts funktion von Claude e
 
 
 Schlussendlich ist alles an der Google API gescheitert, die alte Daten zusammenfast... So kann man nicht die einzelnen Tage der Vergangenen Woche abrufen, sondern nur die Summe dieser. Ohne genügend Daten, kein sich selbst verbessernder Algorithmus, ohne sich selbst verbessernder Algorithmus kein Spaß!
+
+
+
+
+
+
+
+raison d etre:
+Rein therapeutisch
