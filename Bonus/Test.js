@@ -22,3 +22,5 @@ async function loginToFacebook() {
 }
 
 loginToFacebook();
+
+//WOW IS THIS ILLEGAL? NO, IT IS NOT. IT IS JUST A TEST.
