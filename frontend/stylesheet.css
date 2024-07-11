@@ -1,0 +1,32 @@
+h1{
+    margin-left: 30%;;
+    background-color: aqua;
+    text-align: center;
+    align-content: center;
+}
+
+button{
+    margin-left: 30%;
+    background-color: aqua;
+}
+
+#button{
+    margin-left: 30%;
+    background-color: rgb(0, 83, 83);
+    text-align: center;
+    align-content: center;
+}
+
+p{
+    margin-left: 30%;
+    background-color: darkblue;
+    text-align: center;
+    column-span: all;
+}
+
+
+blockquote{
+align-content: center;
+}
+
+

@@ -1,0 +1,16 @@
+.sudoku-grid {
+    display: grid;
+    grid-template-columns: repeat(9, 40px);
+    grid-gap: 2 px;
+    background-color: #000;
+    border: 5 px solid #000;
+    width: fit-content;
+}
+.sudoku-cell {
+    width: 40px;
+    height: 40px;
+
+}
+.sudoku-cell:nth-child(3n) {
+    border-right: 2px solid #000;
+}
