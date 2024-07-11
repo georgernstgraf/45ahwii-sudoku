@@ -7,8 +7,3 @@ export function getAbsolutePath(relativePath) {
   return path.resolve(__dirname, relativePath);
 }
 
-// Verwendung in fetchSudoku.mjs:
-import { getAbsolutePath } from './pathHelper.mjs';
-
-const directoryPath = getAbsolutePath('../SUDOKUS');
-// Verwenden Sie directoryPath in Ihrer fetchSudoku-Funktion

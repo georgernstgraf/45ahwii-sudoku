@@ -1,6 +1,8 @@
 import fetch from 'node-fetch';
 import fs from 'fs';
 import path from 'path';
+import { getAbsolutePath } from './pathHelper.mjs';
+
 
 const url = 'https://a-randomizer-data-api.p.rapidapi.com/api/random/sudokus?count=1&difficultyLevel=5';
 const options = {
@@ -11,7 +13,7 @@ const options = {
     }
 };
 
-const directoryPath = '../SUDOKUS';
+const directoryPath = getAbsolutePath('../SUDOKUS');
 
 export const fetchSudoku = async () => {
     try {
