@@ -1,4 +1,4 @@
-# Mein Markdown lint sagt, dass in der ersten Zeile ein h1 sein soll... bald deaktiviere ich die extension wieder, wenn sie mir weiter so auf die nerven geht, zudem darf man auch kein leerzeichen oder keinen punkt am ende der Überschrift haben, aber er beschwert sich nicht über die Länge... das macht irgendwie keinen Sinn
+# Markdown lint sagt, dass in der ersten Zeile ein h1 sein soll... bald deaktiviere ich die extension wieder, wenn sie mir weiter so auf die nerven geht, zudem darf man auch kein leerzeichen oder keinen punkt am ende der Überschrift haben, aber er beschwert sich nicht über die Länge... das macht irgendwie keinen Sinn
 
 - [ ] Ordnung einkehren lassen
 - [ ] Überlege dir eine einheitliche Struktur

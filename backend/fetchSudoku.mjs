@@ -11,9 +11,9 @@ const options = {
     }
 };
 
-const directoryPath = '../beispiele';
+const directoryPath = '../SUDOKUS';
 
-const fetchSudoku = async () => {
+export const fetchSudoku = async () => {
     try {
         const response = await fetch(url, options);
         const result = await response.json();
@@ -38,4 +38,4 @@ const fetchSudoku = async () => {
     }
 };
 
-fetchSudoku();
+//fetchSudoku(); brauchen wir nicht, da wenn ein EJS importet wird, wird es auch ausgeführt. Die Function calls, eher dann im Main.ejs lassen
