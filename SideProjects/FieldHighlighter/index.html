@@ -5,89 +5,96 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
     
 </head>
 <body>
+    <button id="run">Let me fill the Grid!</button>
+    <!-- Emmet snippet: .sudoku-grid>(.sudoku-cell[data-x="0"][data-y="$"])*9+(.sudoku-cell[data-x="1"][data-y="$"])*9+(.sudoku-cell[data-x="2"][data-y="$"])*9+(.sudoku-cell[data-x="3"][data-y="$"])*9+(.sudoku-cell[data-x="4"][data-y="$"])*9+(.sudoku-cell[data-x="5"][data-y="$"])*9+(.sudoku-cell[data-x="6"][data-y="$"])*9+(.sudoku-cell[data-x="7"][data-y="$"])*9+(.sudoku-cell[data-x="8"][data-y="$"])*9-->
     <div class="sudoku-grid">
-        <!-- 81 cells for a 9x9 Sudoku grid -->
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
-        <div class="sudoku-cell"></div>
+        <div class="sudoku-cell" data-x="0" data-y="1"></div>
+        <div class="sudoku-cell" data-x="0" data-y="2"></div>
+        <div class="sudoku-cell" data-x="0" data-y="3"></div>
+        <div class="sudoku-cell" data-x="0" data-y="4"></div>
+        <div class="sudoku-cell" data-x="0" data-y="5"></div>
+        <div class="sudoku-cell" data-x="0" data-y="6"></div>
+        <div class="sudoku-cell" data-x="0" data-y="7"></div>
+        <div class="sudoku-cell" data-x="0" data-y="8"></div>
+        <div class="sudoku-cell" data-x="0" data-y="9"></div>
+        <div class="sudoku-cell" data-x="1" data-y="1"></div>
+        <div class="sudoku-cell" data-x="1" data-y="2"></div>
+        <div class="sudoku-cell" data-x="1" data-y="3"></div>
+        <div class="sudoku-cell" data-x="1" data-y="4"></div>
+        <div class="sudoku-cell" data-x="1" data-y="5"></div>
+        <div class="sudoku-cell" data-x="1" data-y="6"></div>
+        <div class="sudoku-cell" data-x="1" data-y="7"></div>
+        <div class="sudoku-cell" data-x="1" data-y="8"></div>
+        <div class="sudoku-cell" data-x="1" data-y="9"></div>
+        <div class="sudoku-cell" data-x="2" data-y="1"></div>
+        <div class="sudoku-cell" data-x="2" data-y="2"></div>
+        <div class="sudoku-cell" data-x="2" data-y="3"></div>
+        <div class="sudoku-cell" data-x="2" data-y="4"></div>
+        <div class="sudoku-cell" data-x="2" data-y="5"></div>
+        <div class="sudoku-cell" data-x="2" data-y="6"></div>
+        <div class="sudoku-cell" data-x="2" data-y="7"></div>
+        <div class="sudoku-cell" data-x="2" data-y="8"></div>
+        <div class="sudoku-cell" data-x="2" data-y="9"></div>
+        <div class="sudoku-cell" data-x="3" data-y="1"></div>
+        <div class="sudoku-cell" data-x="3" data-y="2"></div>
+        <div class="sudoku-cell" data-x="3" data-y="3"></div>
+        <div class="sudoku-cell" data-x="3" data-y="4"></div>
+        <div class="sudoku-cell" data-x="3" data-y="5"></div>
+        <div class="sudoku-cell" data-x="3" data-y="6"></div>
+        <div class="sudoku-cell" data-x="3" data-y="7"></div>
+        <div class="sudoku-cell" data-x="3" data-y="8"></div>
+        <div class="sudoku-cell" data-x="3" data-y="9"></div>
+        <div class="sudoku-cell" data-x="4" data-y="1"></div>
+        <div class="sudoku-cell" data-x="4" data-y="2"></div>
+        <div class="sudoku-cell" data-x="4" data-y="3"></div>
+        <div class="sudoku-cell" data-x="4" data-y="4"></div>
+        <div class="sudoku-cell" data-x="4" data-y="5"></div>
+        <div class="sudoku-cell" data-x="4" data-y="6"></div>
+        <div class="sudoku-cell" data-x="4" data-y="7"></div>
+        <div class="sudoku-cell" data-x="4" data-y="8"></div>
+        <div class="sudoku-cell" data-x="4" data-y="9"></div>
+        <div class="sudoku-cell" data-x="5" data-y="1"></div>
+        <div class="sudoku-cell" data-x="5" data-y="2"></div>
+        <div class="sudoku-cell" data-x="5" data-y="3"></div>
+        <div class="sudoku-cell" data-x="5" data-y="4"></div>
+        <div class="sudoku-cell" data-x="5" data-y="5"></div>
+        <div class="sudoku-cell" data-x="5" data-y="6"></div>
+        <div class="sudoku-cell" data-x="5" data-y="7"></div>
+        <div class="sudoku-cell" data-x="5" data-y="8"></div>
+        <div class="sudoku-cell" data-x="5" data-y="9"></div>
+        <div class="sudoku-cell" data-x="6" data-y="1"></div>
+        <div class="sudoku-cell" data-x="6" data-y="2"></div>
+        <div class="sudoku-cell" data-x="6" data-y="3"></div>
+        <div class="sudoku-cell" data-x="6" data-y="4"></div>
+        <div class="sudoku-cell" data-x="6" data-y="5"></div>
+        <div class="sudoku-cell" data-x="6" data-y="6"></div>
+        <div class="sudoku-cell" data-x="6" data-y="7"></div>
+        <div class="sudoku-cell" data-x="6" data-y="8"></div>
+        <div class="sudoku-cell" data-x="6" data-y="9"></div>
+        <div class="sudoku-cell" data-x="7" data-y="1"></div>
+        <div class="sudoku-cell" data-x="7" data-y="2"></div>
+        <div class="sudoku-cell" data-x="7" data-y="3"></div>
+        <div class="sudoku-cell" data-x="7" data-y="4"></div>
+        <div class="sudoku-cell" data-x="7" data-y="5"></div>
+        <div class="sudoku-cell" data-x="7" data-y="6"></div>
+        <div class="sudoku-cell" data-x="7" data-y="7"></div>
+        <div class="sudoku-cell" data-x="7" data-y="8"></div>
+        <div class="sudoku-cell" data-x="7" data-y="9"></div>
+        <div class="sudoku-cell" data-x="8" data-y="1"></div>
+        <div class="sudoku-cell" data-x="8" data-y="2"></div>
+        <div class="sudoku-cell" data-x="8" data-y="3"></div>
+        <div class="sudoku-cell" data-x="8" data-y="4"></div>
+        <div class="sudoku-cell" data-x="8" data-y="5"></div>
+        <div class="sudoku-cell" data-x="8" data-y="6"></div>
+        <div class="sudoku-cell" data-x="8" data-y="7"></div>
+        <div class="sudoku-cell" data-x="8" data-y="8"></div>
+        <div class="sudoku-cell" data-x="8" data-y="9"></div>
     </div>
+
+
 </body>
 </html>
