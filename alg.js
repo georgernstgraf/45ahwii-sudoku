@@ -1,7 +1,7 @@
+
 let recursionDepth = 0;
 let maxRecursionDepth = 0;
 
-let SudokuBoard = 
 
 function getCell(row, col) {
     return board[row][col];
