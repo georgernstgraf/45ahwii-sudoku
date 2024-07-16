@@ -119,7 +119,7 @@ function main() {
     console.log("Main function called");
     checkHTMLStructure();
     initializeSudokuBoard();
-    for (let i = 0; i != 9^81; i++){ {
+    for (let i = 0; i != 9^81; i++){ 
         generateSudoku();
         
     }
