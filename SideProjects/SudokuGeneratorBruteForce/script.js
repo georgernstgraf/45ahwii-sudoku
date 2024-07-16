@@ -119,6 +119,10 @@ function main() {
     console.log("Main function called");
     checkHTMLStructure();
     initializeSudokuBoard();
+    for (let i = 0; i != 9^81; i++){ {
+        generateSudoku();
+        
+    }
     generateSudoku();
     updateDisplay();
     console.log("Sudoku board generated and displayed");
@@ -132,6 +136,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Also attach main to the window object in case you need to call it manually
 window.main = main;
+
+
+
+function SudokuValid() {
+//eine Spalte in ein Array schreiben. Sortieren lassen -> Zahlenfolge muss 1-9 sein, wenn nicht dann ist es schonmal nicht valid.
+//Das für jede Spalte und jede Zeile machen
+//Schwieriger werden die Boxen.
+//Was ist aber die Wahrscheinlichkeit der Richtigkeit des Sudokus? 9^81 wäre dabei der erste Gedanke, da 1/9 richtig sein müsste in 81 Feldern.
+//Dauert so lange bis VSCode/Chrome abstürzt.
+}
+
+
+
+
 
 function checkHTMLStructure() {
     const grid = document.querySelector('.sudoku-grid');
