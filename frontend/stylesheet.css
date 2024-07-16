@@ -27,6 +27,48 @@ p{
 
 blockquote{
 align-content: center;
+color-scheme: dark;
+background-color: bisque;
+padding: 10px;
 }
 
 
+.sudoku-grid {
+    margin: 20%;
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    grid-template-rows: repeat(9, 1fr);
+    gap: 1px;
+    border: 3px solid #000;
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    max-width: 500px;
+    background-color: #000; /* Color of the thin grid lines */
+}
+
+.sudoku-cell {
+    background-color: rgb(235, 129, 87);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Thicker lines for 3x3 subgrids */
+.sudoku-cell:nth-child(3n) {
+    border-right: 2px solid #000;
+}
+
+.sudoku-cell:nth-child(n+19):nth-child(-n+27),
+.sudoku-cell:nth-child(n+46):nth-child(-n+54) {
+    border-bottom: 2px solid #000;
+}
+
+/* Adjust right border for rightmost cells */
+.sudoku-cell:nth-child(9n) {
+    border-right: none;
+}
+
+/* Adjust bottom border for bottom row cells */
+.sudoku-cell:nth-child(n+73):nth-child(-n+81) {
+    border-bottom: none;
+}

@@ -8,10 +8,18 @@ Bis mir eine Neue Methodik einfällt.
 
 Wieso der Abbruch? Um ein Sudoku zu bruteforcen muss man es annähernd 9^81 Mal generieren lassen.
 
+Es ist bald wieder an der Zeit, dass ich Dinge entferne!
 
-> Wenn ein unordentlicher Schreibtisch einen unordentlichen Geist repräsentiert, was sagt dann ein leerer Schreibtisch über den
-> Menschen, der ihn benutzt aus?
-> -Albert Einstein
+## We are entering Phase 3 prepare for take off
+
+implementierung der nutzlichen Dinge der Side-projekts ins Frontend.
+
+Next step: darstellen der JSON sudokus im Grid.
+
+
+
+
+--------------------------------------------------------------------------------------------------
 
 > For the You that remains, that remains, and remains...
 
