@@ -6,6 +6,8 @@
     <title>Sudokus</title>
     <link rel="stylesheet" href="stylesheet.css">
     <script src="FESCRIPT.JS" defer></script>
+    <script src="abyssScroll.js" defer></script>
+    <script src="Solver.js" defer></script>
 </head>
 <body>
     <h1>Sudokus</h1>
@@ -24,7 +26,8 @@
     <!--Speed Slider-->
     <label for="volume">Speed:</label>
     <input type="range" id="Speed" name="volume" min="0" max="100">
-
+    <button id="flipdoku">Flipdoku!</button>
+    <button id="abyssButton">Scroll into Abyss</button>
     <div class="sudoku-grid">
         <div class="sudoku-cell" data-x="0" data-y="1"></div>
         <div class="sudoku-cell" data-x="0" data-y="2"></div>
@@ -107,6 +110,18 @@
         <div class="sudoku-cell" data-x="8" data-y="7"></div>
         <div class="sudoku-cell" data-x="8" data-y="8"></div>
         <div class="sudoku-cell" data-x="8" data-y="9"></div>
+    </div>
+
+
+    <div id="abyssContent">
+        <div class="abyss-section">
+            <h2>Welcome to the Fullscreen Abyss</h2>
+            <p>This is where you can add your custom content.</p>
+        </div>
+        <div class="abyss-section">
+            <h2>Section 2</h2>
+            <p>Add more sections and content as needed.</p>
+        </div>
     </div>
 </body>
 </html>

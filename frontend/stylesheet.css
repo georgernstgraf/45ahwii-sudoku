@@ -5,6 +5,23 @@ h1{
     align-content: center;
 }
 
+#abyssButton {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    background-color: #3498db;
+    transition: background-color 0.3s;
+}
+#abyssButton:hover {
+    background-color: #2980b9;
+}
+
 button{
     margin-left: 30%;
     background-color: aqua;

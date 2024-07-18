@@ -63,3 +63,14 @@ function sudokuJSONhandler() {
 }
 
 sudokuJSONhandler();
+
+getdocumentbyid('flipdoku').addEventListener('click', Flipdoku ())
+
+function Flipdoku(){
+    //flip the sudoku
+
+
+}
+
+
+
