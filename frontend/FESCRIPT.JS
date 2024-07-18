@@ -50,4 +50,16 @@ function setCellValue(x, y, value) {
     updateDisplay(); // Update the HTML to reflect the change
 }
 
+function sudokuJSONhandler() {
+    fetch('../SUDOKUS/unsolvedSudoku1.json')
+        .then(response => response.json())
+        .then(data => {
+            sudokuBoard = data;
+            updateDisplay();
+        })
+        .catch(error => {
+            console.error('Error fetching or parsing JSON:', error);
+        });
+}
 
+sudokuJSONhandler();
