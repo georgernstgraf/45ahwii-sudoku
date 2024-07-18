@@ -1,13 +1,33 @@
 // abyssScroll.js
 
-function initAbyssScroll() {
-    const button = document.getElementById('abyssButton');
-    const abyssContent = document.getElementById('abyssContent');
-    let isScrolled = false;
+const AbyssScroll = (function() {
+    // Private Variablen
+    let button, abyssContent, isInAbyss = false;
 
-    // Initial den Abyss-Inhalt verstecken
-    abyssContent.style.display = 'none';
+    // DOM-Manipulation Funktionen
+    function showAbyssContent() {
+        abyssContent.style.display = 'block';
+    }
 
+    function hideAbyssContent() {
+        abyssContent.style.display = 'none';
+    }
+
+    function createAbyssDiv() {
+        const abyssDiv = document.createElement('div');
+        abyssDiv.style.height = '1000000px';
+        abyssDiv.id = 'abyssDiv';
+        document.body.appendChild(abyssDiv);
+    }
+
+    function removeAbyssDiv() {
+        const abyssDiv = document.getElementById('abyssDiv');
+        if (abyssDiv) {
+            document.body.removeChild(abyssDiv);
+        }
+    }
+
+    // Cookie Funktionen
     function setCookie(name, value, days) {
         let expires = "";
         if (days) {
@@ -29,6 +49,7 @@ function initAbyssScroll() {
         return null;
     }
 
+    // Fullscreen Funktionen
     function enterFullscreen(element) {
         if(element.requestFullscreen) {
             element.requestFullscreen();
@@ -53,72 +74,77 @@ function initAbyssScroll() {
         }
     }
 
+    // UI Update Funktionen
     function updateButtonState(clicked) {
-        if (clicked) {
-            button.textContent = 'Bereits geklickt';
-            button.style.backgroundColor = '#95a5a6';
-            button.disabled = true;
-        } else {
-            button.textContent = 'Scroll into Abyss';
-            button.style.backgroundColor = '#3498db';
-            button.disabled = false;
+        button.textContent = clicked ? 'Zurück aus dem Abgrund' : 'Scroll into Abyss';
+        button.style.backgroundColor = clicked ? '#e74c3c' : '#3498db';
+    }
+
+    // Scroll Funktionen
+    function preventScroll(e) {
+        if (isInAbyss) {
+            e.preventDefault();
+            e.stopPropagation();
+            window.scrollTo(0, document.body.scrollHeight);
         }
     }
 
-    // Überprüfen Sie beim Laden der Seite, ob der Cookie gesetzt ist
-    window.addEventListener('load', function() {
+    function scrollToBottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Haupt-Logik Funktionen
+    function enterAbyss() {
+        setCookie('abyssClicked', 'true', 7);
+        showAbyssContent();
+        createAbyssDiv();
+        scrollToBottom();
+        enterFullscreen(document.documentElement);
+        updateButtonState(true);
+        isInAbyss = true;
+    }
+
+    function exitAbyss() {
+        hideAbyssContent();
+        removeAbyssDiv();
+        exitFullscreen();
+        scrollToTop();
+        updateButtonState(false);
+        isInAbyss = false;
+    }
+
+    // Event Handler
+    function handleButtonClick() {
+        isInAbyss ? exitAbyss() : enterAbyss();
+    }
+
+    function handlePageLoad() {
         const abyssClicked = getCookie('abyssClicked');
         updateButtonState(abyssClicked === 'true');
-    });
+    }
 
-    button.addEventListener('click', function() {
-        if (!isScrolled) {
-            // Cookie setzen
-            setCookie('abyssClicked', 'true', 7); // Cookie für 7 Tage setzen
+    // Initialisierung
+    function init() {
+        button = document.getElementById('abyssButton');
+        abyssContent = document.getElementById('abyssContent');
+        hideAbyssContent();
 
-            // Abyss-Inhalt anzeigen
-            abyssContent.style.display = 'block';
+        window.addEventListener('load', handlePageLoad);
+        window.addEventListener('scroll', preventScroll, { passive: false });
+        window.addEventListener('wheel', preventScroll, { passive: false });
+        window.addEventListener('touchmove', preventScroll, { passive: false });
+        button.addEventListener('click', handleButtonClick);
+    }
 
-            // Sehr hohen div erstellen, um Scrollen zu ermöglichen
-            const abyssDiv = document.createElement('div');
-            abyssDiv.style.height = '1000000px';
-            abyssDiv.id = 'abyssDiv';
-            document.body.appendChild(abyssDiv);
-
-            // Zum Abyss-Inhalt scrollen
-            abyssContent.scrollIntoView({ behavior: 'smooth' });
-
-            // Vollbildmodus aktivieren
-            enterFullscreen(document.documentElement);
-
-            // Button-Erscheinungsbild ändern
-            button.textContent = 'Zurück aus dem Abgrund';
-            button.style.backgroundColor = '#e74c3c';
-
-            isScrolled = true;
-        } else {
-            // Abyss-Inhalt ausblenden
-            abyssContent.style.display = 'none';
-
-            // Hohen div entfernen
-            const abyssDiv = document.getElementById('abyssDiv');
-            if (abyssDiv) {
-                document.body.removeChild(abyssDiv);
-            }
-
-            // Vollbildmodus beenden
-            exitFullscreen();
-
-            // Zurück nach oben scrollen
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            // Button-Zustand aktualisieren
-            updateButtonState(true);
-
-            isScrolled = false;
-        }
-    });
-}
+    // Public API
+    return {
+        init: init
+    };
+})();
 
 // Funktion aufrufen, wenn das DOM geladen ist
-document.addEventListener('DOMContentLoaded', initAbyssScroll);
+document.addEventListener('DOMContentLoaded', AbyssScroll.init);
