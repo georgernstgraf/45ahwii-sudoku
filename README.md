@@ -15,11 +15,32 @@ Wieso der Abbruch? Um ein Sudoku zu bruteforcen muss man es annähernd 9^81 Mal 
 
 Es ist bald wieder an der Zeit, dass ich Dinge entferne!
 
-## We are entering Phase 3 prepare for take off
+## Phase 3
 
 implementierung der nutzlichen Dinge der Side-projekts ins Frontend.
 
-Next step: darstellen der JSON sudokus im Grid.
+~~ darstellen der JSON sudokus im Grid.~~
+
+Next steps:
+
+Neuer Ansatz der Lösung des Sudokus nach ethischen sowie ökonomischen Prinzipien- Diverse Sudoku Algorithmen
+
+Ascii-Mood darstellung der Personas
+
+
+## Phase 4 Der Abschluss
+
+Finish ToDos
+
+Clean-up
+
+main-merge preperation
+
+Mermaid Flowcharts hinzufügen!
+
+Ein neues ReadMe erstellen, das hier wird zum Legacy-ReadMe
+
+&Final neuen/anderen Projekten widmen.
 
 --------------------------------------------------------------------------------------------------
 

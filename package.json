@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "express": "^4.19.2",
     "fs": "^0.0.1-security",
     "get-ascii-image": "^1.3.6",
     "node-fetch": "^3.3.2"
