@@ -36,9 +36,11 @@ button{
 
 p{
     margin-left: 30%;
-    background-color: darkblue;
+    background-color: rgb(11, 180, 195);
     text-align: center;
     column-span: all;
+    align-content: center;
+    font-size: 20px;
 }
 
 

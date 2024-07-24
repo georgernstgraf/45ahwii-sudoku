@@ -4,7 +4,7 @@ import pyautogui
 
 def list_window_titles():
     windows = pyautogui.getAllWindows()
-    return [win.title for win in windows if win.title]  # Filter out empty titles
+    return [win.title for win in windows if win.title]  
 
 def select_window(windows):
     print("Verfügbare Fenster:")

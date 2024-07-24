@@ -1,6 +1,6 @@
 # https://countertext.com/gilles-deleuze/
 
-- [ ] Ordnung einkehren lassen
+- [x] Ordnung einkehren lassen
 - [x] Überlege dir eine einheitliche Struktur
 - [x] Entferne überflüssige Dinge
 - [x] ToDo-liste erstellen 10.7.24
@@ -14,5 +14,9 @@
 - [x] CSS...
 - [ ] Bonusguide aktualisieren
 
+- [x] Viel komplizierter machen als es sein sollte
+- [ ] Ascii Art einbauen
+
 LOG:
 -Erstellung 10.7. 14:06
+-Überlegen die ToDo liste zu löschen 24.7.
