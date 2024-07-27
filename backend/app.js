@@ -11,7 +11,11 @@ app.engine('html', require('ejs').renderFile);
 app.set('views', path.join(__dirname, '../frontend/'));
 // Routes and middleware
 // app.use(/* ... */)
-// app.get(/* ... */)
+app.get(["/", "/index.html"], (req, res) => {
+  console.log("req index");
+  return res.render("index.html");
+});
+
 app.use('/beispieleJSON', beispieleJSON);
 // app.use('/beispieleTXT', beispieleTXT);
 app.use('/beispiele', beispieleList);
@@ -31,5 +35,5 @@ app.listen(1234, function (err) {
     return console.error(err);
   }
 
-  console.log('Started at http://localhost:1234');
+  console.log(`Started ${new Date().toLocaleTimeString()} http://localhost:1234`);
 });

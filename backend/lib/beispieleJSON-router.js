@@ -2,7 +2,7 @@ const { assert } = require('console');
 const express = require('express');
 const fs = require('fs/promises');
 const router = express.Router();
-const sudoku = require('../../frontend/sudoku.js');
+const sudoku = require('../../frontend/js/sudoku.js');
 
 router.get('/:fileName', async (req, res) => {
     let content;
