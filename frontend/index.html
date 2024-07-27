@@ -31,9 +31,7 @@
                     <div class="output" id="rekursion-debt">
                         Rekursion debt: /
                     </div>
-                    <div id="select" hx-get="/beispiele" hx-swap="outerHTML">
-                        Load Examples
-                    </div>
+                    <%- include('beispiele.html') %>
                     <div id="error"></div>
                 </div>
             </div>

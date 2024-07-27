@@ -1,8 +1,7 @@
 'use strict';
 const path = require('path');
 const express = require('express');
-const beispieleJSON = require('./lib/beispieleJSON-router.js');
-const beispieleList = require('./lib/beispieleList-router.js');
+const beispieleJSON = require('./routes/beispieleJSON-router.js');
 
 // Create the express app
 const app = express();
@@ -11,14 +10,19 @@ app.engine('html', require('ejs').renderFile);
 app.set('views', path.join(__dirname, '../frontend/'));
 // Routes and middleware
 // app.use(/* ... */)
-app.get(["/", "/index.html"], (req, res) => {
-  console.log("req index");
-  return res.render("index.html");
+app.get(["/", "/index.html"], async (req, res) => {
+  const { beispiele } = require('./lib/beispiele-list');
+  let response;
+  try {
+    response = await beispiele();
+  } catch (err) {
+    return res.status(404).send(err.message);
+  }
+  return res.render("index", { beispiele: response });
 });
 
 app.use('/beispieleJSON', beispieleJSON);
 // app.use('/beispieleTXT', beispieleTXT);
-app.use('/beispiele', beispieleList);
 app.use("", express.static('../frontend'));
 // Error handlers als Letzte
 app.use(function fourOhFourHandler(req, res) {

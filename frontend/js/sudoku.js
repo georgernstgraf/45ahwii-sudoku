@@ -1,6 +1,5 @@
 const colNames = ["a", "b", "c", "d", "e", "f", "g", "h", "i"];
 const rowNames = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
-
 class Sudoku {
     #recursion_depth;
     _maxSolutions;
@@ -11,7 +10,6 @@ class Sudoku {
         this.recursionDepth = recursionDepth;
         this.state = state;
     }
-
     solveObvious() {
         // so lange obviuos felder befüllen bis sich nix mehr tut
         // a) massimo  // TODO fehler in schleife
@@ -41,7 +39,6 @@ class Sudoku {
         }
         return this.grid.cellCount() - countInital;
     }
-
     makeAssumptions() {
         // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Iterators_and_generators
         // iterator bauen, der neue Sudoku Objekte liefert!!
@@ -51,10 +48,7 @@ class Sudoku {
         }
         return;
     }
-
-
     // probiere für jede Annahme das Sudoku neu zu lösen
-
     solve() {
         if (this.grid.isFull()) {
             console.error("ERROR: Sudoku is already solved, but you called solve().");
@@ -73,7 +67,12 @@ class Sudoku {
         }
         this.makeAssumptions();
     }
-
+    renderInto(domNode) {
+        Array.from(domNode.querySelectorAll(".grid-item")).forEach(e => e.innerHTML = "");
+        for (let pos in this.grid.data) {
+            domNode.querySelector(`#${pos}`).innerText = this.grid.data[pos];
+        }
+    }
 }
 class Cell {
     constructor(position, value, recursionDepth, isAssumption) {
@@ -109,7 +108,9 @@ class Grid {
     cellCount() {
         return Object.keys(this.data).length;
     }
-    isValid() { }
+    isValid() {
+        return true; // TODO: implement}
+    }
 }
 const myExports = { Sudoku, Cell, colNames, rowNames, Grid };
 if (typeof window != 'undefined') {  // browser

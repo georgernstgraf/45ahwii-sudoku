@@ -1,21 +1,20 @@
 // do whatever you like with the solutions
-
-const state = {};
-
+const state = { error: "OK" };
 function initGrid() {
-    const grid = document.getElementById("sudoku-container");
-
+    state.sudoku = null;
+    const grid = sudokuGrid$;
+    Array.from(sudokuGrid$.children).forEach(c => c.remove());
     for (let i = 1; i <= 9; i++) {
         const subgrid = document.createElement("div");
         subgrid.classList.add("subgrid");
         subgrid.id = "subgrid-" + i;
         for (let key of getSubGridKeys(i)) {
             const cell = document.createElement("div");
-            cell.classList.add("grid-items");
+            cell.classList.add("grid-item");
             cell.id = key;
             cell.textContent = key;
             subgrid.appendChild(cell);
-            console.log(key);
+            // console.log(key);
         }
         grid.appendChild(subgrid);
     }
@@ -32,7 +31,7 @@ function getSubGridKeys(num) {
             keys.push(col[firstColIndex + j] + row[firstRowIndex + i]);
         }
     }
-    console.log(keys);
+    // console.log(keys);
     return keys;
 }
 function resetState() {
@@ -45,44 +44,59 @@ function resetState() {
         intervalId: NaN,
     });
 }
-function fetchSudoku(url) {
-    fetch(url)
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error(response.statusText);
-            }
-            return response.json();
-        })
-        .then((obj) => {
-            resetState();
-            state.sudoku = new Sudoku({ data: obj, recursionDepth: 0, state });
-        })
-        .catch((e) => {
-            console.error(e);
-            error$.innerText = e.message;
-        });
+async function fetchSudoku(url) {
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error(response.statusText);
+    }
+    const obj = await response.json();
+    resetState();
+    const sudoku = new Sudoku({ data: obj, recursionDepth: 0, state });
+    state.sudoku = sudoku;
 }
+
 // 3 - dom node refs
 const error$ = document.getElementById("error");
+const sudokuGrid$ = document.getElementById("sudoku-container");
+const beispieleSelect$ = document.getElementById("beispieleSelect");
 // 5 -render functions
 function render() {
     // den gesamten state in den div.
     // elementen anzeigen
+    console.log('render called');
+    if (state.sudoku) {
+        try {
+            state.sudoku.renderInto(sudokuGrid$);
+        }
+        catch (e) {
+            state.error = e.message;
+        }
+    }
+    error$.innerText = state.error;
 }
-
 function displaySudoku(sudoku) {
-    // sudoku im grid anzeigen
+    sudoku.renderInto(sudokuGrid$);
 }
-
 function displayNextStep() {
     const sudoku = state.allSteps.shift();
     displaySudoku(sudoku);
 }
 // 6 Event Handlers
-function onSelectSudoku() {
-    const beispieleSelect$ = document.getElementById("beispieleSelect");
+async function onSelectSudoku() {
     const url = beispieleSelect$.value;
     console.log("now fetching: ", url);
-    fetchSudoku(url);
+    state.error = "now fetching";
+    try {
+        await fetchSudoku(url);
+        state.error = "OK";
+    }
+    catch (e) {
+        state.error = e.message;
+    };
+    render();
 }
+
+// 7 - was war das noch?
+// 8 - initial render
 initGrid();
+render();
