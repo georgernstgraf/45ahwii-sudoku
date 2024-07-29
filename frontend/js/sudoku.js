@@ -109,6 +109,7 @@ class Grid {
         return Object.keys(this.data).length;
     }
     isValid() {
+        // throw new Error("not implemented");
         return true; // TODO: implement}
     }
 }

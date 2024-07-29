@@ -2,11 +2,9 @@
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;
-    background-color: #444;
+    /* background-color: #444; */
     padding: 10px;
-    border-radius: 10px;
-    /* width: fit-content; */
-    gap: 1rem
+    gap: 0.5rem
 }
 
 .subgrid {
@@ -14,9 +12,7 @@
     aspect-ratio: 1;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;
-    background-color: #888;
-    padding: 10px;
-    border-radius: 10px;
+    gap: 0.25rem
 }
 
 .grid-item {
