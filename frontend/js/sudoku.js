@@ -101,6 +101,7 @@ class Cell {
 class Grid {
     colNames = ["a", "b", "c", "d", "e", "f", "g", "h", "i"];
     rowNames = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
+
     constructor(obj) {
         const data = {};
         Object.assign(data, obj);
@@ -170,9 +171,41 @@ class Grid {
         }
         return true;
     }
-    isValidSquares() {}
+    isValidSquares() {
+        for (let i = 1; i <= 9; i++) {
+            if (this.isValidSquare(i) === false) return false;
+        }
+        return true;
+    }
+    isValidSquare(num) {
+        const keys = getSubGridKeys(num);
+        for (let i = 0; i < keys.length; i++) {
+            for (let j = 0; j < keys.length; j++) {
+                if (i === j) continue;
+                if (this.data[keys[i]] === undefined) continue;
+                if (this.data[keys[j]] === undefined) continue;
+                if (this.data[keys[i]] === this.data[keys[j]]) return false;
+            }
+        }
+        return true;
+    }
+    getSubGridKeys(num) {
+        const col = ["a", "b", "c", "d", "e", "f", "g", "h", "i"];
+        const row = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        num = num - 1;
+        let firstColIndex = (num % 3) * 3;
+        let firstRowIndex = Math.floor(num / 3) * 3;
+        let keys = [];
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                keys.push(col[firstColIndex + j] + row[firstRowIndex + i]);
+            }
+        }
+        // console.log(keys);
+        return keys;
+    }
 
-    isValid() {s
+    isValid() {
         if (this.isValidRows() === false) {
             console.log("Grid is invalid");
             return false;
