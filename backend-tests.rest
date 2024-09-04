@@ -1,0 +1,12 @@
+GET http://localhost:1234/beispieleJSON/unsolvedSudoku1
+
+###
+GET http://localhost:1234/beispieleJSON/unsolvedSudoku2
+
+###
+GET http://localhost:1234/beispieleJSON/unsolvedSudoku3
+
+###
+GET http://localhost:1234/index.html
+
+

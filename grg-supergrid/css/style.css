@@ -1,0 +1,75 @@
+:root {
+    --square-max: 100dvmin;
+    --sudoku-size: calc(var(--square-max)*.96);
+    --cell-size: calc(var(--sudoku-size) /9.3);
+    --fs-val: calc(var(--sudoku-size) / 13);
+    --fs-poss: calc(var(--sudoku-size)/44)
+}
+
+.container-fluid {
+    --bs-columns: 1
+}
+
+/* keine possibility wenn screen zu klein: */
+@media (max-width: 18cm),
+(max-height: 18cm) {
+    .possibility {
+        visibility: hidden;
+    }
+}
+
+/* 2-Spalten wenn schirm breit genug: */
+@media (min-aspect-ratio: 1.3) {
+    .container-fluid {
+        --bs-columns: 2
+    }
+
+    .tools {
+        grid-column-start: 1;
+        grid-row-start: 1;
+        width: unset !important;
+        /* margin-left: auto !important;
+        margin-right: auto !important; */
+    }
+}
+
+.sudoku {
+    width: var(--sudoku-size);
+    height: var(--sudoku-size);
+    --bs-rows: 9;
+    --bs-columns: 9;
+    --bs-gap: 1px;
+}
+
+.tools {
+    width: var(--sudoku-size);
+}
+
+.cell {
+    align-items: center;
+    align-content: center;
+    width: var(--cell-size);
+    height: var(--cell-size);
+    --bs-rows: 3;
+    --bs-columns: 3;
+    --bs-gap: 1px;
+}
+
+.possibility {
+    text-shadow:
+        -1px -1px 0 var(--bs-body-bg),
+        1px -1px 0 var(--bs-body-bg),
+        -1px 1px 0 var(--bs-body-bg),
+        1px 1px 0 var(--bs-body-bg);
+    font-size: var(--fs-poss);
+}
+
+.val {
+    grid-row: 1/4;
+    grid-column: 1/4;
+    font-size: var(--fs-val)
+}
+
+[x-cloak] {
+    display: none !important;
+}

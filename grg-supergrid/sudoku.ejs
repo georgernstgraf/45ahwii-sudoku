@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="css/bootstrap.css" />
+        <link rel="stylesheet" href="css/style.css" />
+        <title>My Grid</title>
+    </head>
+    <!-- <%function* nextName() { const colLabels=Array.from("abcdefghi"); const
+    rowLabels=Array.from("123456789"); let colIdx=0; let rowIdx=0; while (true)
+    { yield `${colLabels[colIdx]}${rowLabels[rowIdx]}`; colIdx++; if (colIdx==9)
+    { colIdx=0; rowIdx++; } if (rowIdx==9) break; } } nameIter=nextName();%> -->
+    <body data-bs-theme="dark">
+        <div class="container-fluid my-2 grid">
+            <div class="sudoku grid border border-primary rounded-1 mx-auto">
+                <%_ for( let i=0; i < 81; i++ ) { const
+                cellname=nameIter.next().value _%>
+                <!--  the whole cell -->
+                <div
+                    id="<%= cellname %>"
+                    class="cell border border-danger-subtle rounded possibilities grid text-center mx-auto">
+                    <div class="val text-info-emphasis"><%= cellname %></div>
+                    <div
+                        class="ps-1 pt-1 mb-auto me-auto possibility poss1 text-secondary"
+                        style="grid-row: 1/2; grid-column: 1/2">
+                        1
+                    </div>
+                    <div
+                        class="pt-1 mb-auto possibility text-secondary poss2"
+                        style="grid-row: 1/2; grid-column: 2/3">
+                        2
+                    </div>
+                    <div
+                        class="pt-1 pe-1 mb-auto ms-auto possibility text-secondary poss3"
+                        style="grid-row: 1/2; grid-column: 3/4">
+                        3
+                    </div>
+                    <div
+                        class="ps-1 me-auto possibility text-secondary poss4"
+                        style="grid-row: 2/3; grid-column: 1/2">
+                        4
+                    </div>
+                    <div
+                        class="possibility text-secondary poss5"
+                        style="grid-row: 2/3; grid-column: 2/3">
+                        5
+                    </div>
+                    <div
+                        class="pe-1 ms-auto possibility text-secondary poss6"
+                        style="grid-row: 2/3; grid-column: 3/4">
+                        6
+                    </div>
+                    <div
+                        class="ps-1 pb-1 mt-auto me-auto possibility text-secondary poss7"
+                        style="grid-row: 3/4; grid-column: 1/2">
+                        7
+                    </div>
+                    <div
+                        class="pb-1 mt-auto possibility text-secondary poss8"
+                        style="grid-row: 3/4; grid-column: 2/3">
+                        8
+                    </div>
+                    <div
+                        class="pe-1 pb-1 mt-auto ms-auto possibility text-secondary poss9"
+                        style="grid-row: 3/4; grid-column: 3/4">
+                        9
+                    </div>
+                </div>
+                <%_ } _%>
+            </div>
+            <div
+                class="tools mx-auto text-center border border-primary rounded-1">
+                <h1>Sudoku</h1>
+                <p class="text-start p-2">
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                    Corrupti, eius minus doloremque molestiae harum impedit
+                    necessitatibus quam ex debitis. Nam eum modi magni?
+                    Molestias reprehenderit repellat sit perspiciatis tempora
+                    minus possimus eligendi. Ipsam quis laudantium aliquid dolor
+                    iusto culpa, molestias quasi adipisci unde laboriosam
+                    officia mollitia dolores neque autem sint commodi earum
+                    ducimus asperiores rerum cum! Corrupti vero quas, voluptas
+                    sint iusto eum deserunt excepturi. Nulla minus temporibus
+                    ducimus sequi earum? Repellat quas soluta doloribus
+                    molestias assumenda, a expedita commodi nobis neque
+                    laudantium iusto debitis unde eligendi recusandae cum.
+                    Molestiae blanditiis nemo ipsa odit a eos incidunt quam
+                    voluptates! Non.
+                </p>
+            </div>
+        </div>
+    </body>
+</html>
