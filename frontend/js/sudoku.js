@@ -16,26 +16,34 @@ class Sudoku {
         const countInital = this.grid.cellCount();
         let countBefore = countInital;
         while (true) {
-            doMassimos();  // grid befüllen mit new Cell()'s
+            doMassimos(); // grid befüllen mit new Cell()'s
             const countAfter = this.grid.cellCount();
-            if (countBefore === countAfter) break;  // nix mehr zu holen
+            if (countBefore === countAfter) break; // nix mehr zu holen
             countBefore = countAfter;
         }
         const massimos = this.grid.cellCount() - countBefore;
         if (massimos > 0) {
-            console.log(`Massimo found ${massimos} new values / depth: ${this.#recursion_depth}`);
+            console.log(
+                `Massimo found ${massimos} new values / depth: ${
+                    this.#recursion_depth
+                }`
+            );
         }
         // b) amin / andreas
         countBefore = this.grid.cellCount();
         while (true) {
             doAminAndreas(); // grid befüllen mit new Cell()'s
             const countAfter = this.grid.cellCount();
-            if (countBefore === countAfter) break;  // nix mehr zu holen
+            if (countBefore === countAfter) break; // nix mehr zu holen
             countBefore = countAfter;
         }
         const aminadreas = this.grid.cellCount() - countBefore;
         if (aminadreas > 0) {
-            console.log(`Amin / Andreas found ${aminadreas} new values / depth: ${this.#recursion_depth}`);
+            console.log(
+                `Amin / Andreas found ${aminadreas} new values / depth: ${
+                    this.#recursion_depth
+                }`
+            );
         }
         return this.grid.cellCount() - countInital;
     }
@@ -51,12 +59,18 @@ class Sudoku {
     // probiere für jede Annahme das Sudoku neu zu lösen
     solve() {
         if (this.grid.isFull()) {
-            console.error("ERROR: Sudoku is already solved, but you called solve().");
+            console.error(
+                "ERROR: Sudoku is already solved, but you called solve()."
+            );
             return;
-        };
+        }
         const newCellCount = this.solveObvious();
         if (newCellCount > 0) {
-            console.log(`obvious found ${newCellCount} new values at depth ${this.#recursion_depth}`);
+            console.log(
+                `obvious found ${newCellCount} new values at depth ${
+                    this.#recursion_depth
+                }`
+            );
         }
         if (this.grid.isFull()) {
             if (!this.grid.isValid()) {
@@ -68,7 +82,9 @@ class Sudoku {
         this.makeAssumptions();
     }
     renderInto(domNode) {
-        Array.from(domNode.querySelectorAll(".grid-item")).forEach(e => e.innerHTML = "");
+        Array.from(domNode.querySelectorAll(".grid-item")).forEach(
+            (e) => (e.innerHTML = "")
+        );
         for (let pos in this.grid.data) {
             domNode.querySelector(`#${pos}`).innerText = this.grid.data[pos];
         }
@@ -83,6 +99,8 @@ class Cell {
     }
 }
 class Grid {
+    colNames = ["a", "b", "c", "d", "e", "f", "g", "h", "i"];
+    rowNames = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
     constructor(obj) {
         const data = {};
         Object.assign(data, obj);
@@ -91,16 +109,15 @@ class Grid {
             throw new Error("Invalid grid");
         }
     }
-    getCell(position) {
-        return this.data[position];
-    }
+
     setCell(position, value) {
         if (!value instanceof Cell) {
             throw new Error("Value must be an instance of Cell");
         }
         this.data[position] = value;
     }
-    allEmptyCellNames() { // TODO #8
+    allEmptyCellNames() {
+        // TODO #8
     }
     isFull() {
         return this.allEmptyCellNames().length === 0;
@@ -108,14 +125,75 @@ class Grid {
     cellCount() {
         return Object.keys(this.data).length;
     }
-    isValid() {
-        // throw new Error("not implemented");
-        return true; // TODO: implement}
+
+    isValidRows() {
+        for (let rowName of rowNames) {
+            if (this.isValidRow(rowName) === false) return false;
+        }
+        return true;
+    }
+    isValidRow(rowName) {
+        console.log("Checking row " + rowName);
+        for (let colName of colNames) {
+            const cell = colName + rowName;
+            console.log(cell);
+            if (this.data[cell] === undefined) continue;
+            for (let colName2 of colNames) {
+                if (colName === colName2) continue;
+                const cell2 = colName2 + rowName;
+                console.log("1:" + this.data[cell] + " 2:" + this.data[cell2]);
+                if (this.data[cell2] === undefined) continue;
+                if (this.data[cell] === this.data[cell2]) return false;
+            }
+        }
+        return true;
+    }
+
+    isValidCols() {
+        for (let colName of colNames) {
+            if (this.isValidCol(colName) === false) return false;
+        }
+        return true;
+    }
+    isValidCol(colName) {
+        console.log("Checking col " + colName);
+        for (let rowName of rowNames) {
+            const cell = colName + rowName;
+            if (this.data[cell] === undefined) continue;
+            for (let rowName2 of rowNames) {
+                if (rowName === rowName2) continue;
+                const cell2 = colName + rowName2;
+                if (this.data[cell2] === undefined) continue;
+                if (this.data[cell2] === this.data[cell]) return false;
+                console.log("1:" + this.data[cell] + " 2:" + this.data[cell]);
+            }
+        }
+        return true;
+    }
+    isValidSquares() {}
+
+    isValid() {s
+        if (this.isValidRows() === false) {
+            console.log("Grid is invalid");
+            return false;
+        }
+        if (this.isValidCols() === false) {
+            console.log("Grid is invalid");
+            return false;
+        }
+        if (this.isValidSquares() === false) {
+            console.log("Grid is invalid");
+            return false;
+        }
+        console.log("Grid is valid");
+        return true;
     }
 }
 const myExports = { Sudoku, Cell, colNames, rowNames, Grid };
-if (typeof window != 'undefined') {  // browser
+if (typeof window != "undefined") {
+    // browser
     Object.assign(window, myExports);
-} else {  // node
+} else {
+    // node
     module.exports = myExports;
 }
