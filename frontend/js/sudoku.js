@@ -24,8 +24,7 @@ class Sudoku {
         const massimos = this.grid.cellCount() - countBefore;
         if (massimos > 0) {
             console.log(
-                `Massimo found ${massimos} new values / depth: ${
-                    this.#recursion_depth
+                `Massimo found ${massimos} new values / depth: ${this.#recursion_depth
                 }`
             );
         }
@@ -40,8 +39,7 @@ class Sudoku {
         const aminadreas = this.grid.cellCount() - countBefore;
         if (aminadreas > 0) {
             console.log(
-                `Amin / Andreas found ${aminadreas} new values / depth: ${
-                    this.#recursion_depth
+                `Amin / Andreas found ${aminadreas} new values / depth: ${this.#recursion_depth
                 }`
             );
         }
@@ -67,8 +65,7 @@ class Sudoku {
         const newCellCount = this.solveObvious();
         if (newCellCount > 0) {
             console.log(
-                `obvious found ${newCellCount} new values at depth ${
-                    this.#recursion_depth
+                `obvious found ${newCellCount} new values at depth ${this.#recursion_depth
                 }`
             );
         }
@@ -208,24 +205,26 @@ class Grid {
     }
 
     isValid() {
-        if (this.isValidRows() === false) {
-            console.log("Rows are invalid");
-            return false;
+        if (!this.isValidRows()) {
+            console.log("Grid is invalid");
+            if (this.isValidRows() === false) {
+                console.log("Rows are invalid");
+                return false;
+            }
+            if (this.isValidCols() === false) {
+                console.log("Cols are invalid");
+                return false;
+            }
+            if (this.isValidSquares() === false) {
+                console.log("Squares are invalid");
+                return false;
+            }
+            console.log("Grid is valid");
+            return true;
         }
-        if (this.isValidCols() === false) {
-            console.log("Cols are invalid");
-            return false;
-        }
-        if (this.isValidSquares() === false) {
-            console.log("Squares are invalid");
-            return false;
-        }
-        console.log("Grid is valid");
-        return true;
     }
-}
-const myExports = { Sudoku, Cell, colNames, rowNames, Grid };
-if (typeof window != "undefined") {
+    const myExports = { Sudoku, Cell, colNames, rowNames, Grid };
+    if(typeof window != "undefined") {
     // browser
     Object.assign(window, myExports);
 } else {
