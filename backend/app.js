@@ -2,6 +2,7 @@
 const path = require('path');
 const express = require('express');
 const beispieleJSON = require('./routes/beispieleJSON-router.js');
+const { beispiele } = require('./lib/beispiele-list');
 
 // Create the express app
 const app = express();
@@ -11,7 +12,6 @@ app.set('views', path.join(__dirname, '../frontend/'));
 // Routes and middleware
 // app.use(/* ... */)
 app.get(["/", "/index.html"], async (req, res) => {
-  const { beispiele } = require('./lib/beispiele-list');
   let response;
   try {
     response = await beispiele();
