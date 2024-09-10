@@ -135,56 +135,58 @@ class Grid {
     }
     isValidRow(rowName) {
         console.log("Checking row " + rowName);
+        const set = new Set();
         for (let colName of colNames) {
             const cell = colName + rowName;
-            console.log(cell);
-            if (this.data[cell] === undefined) continue;
-            for (let colName2 of colNames) {
-                if (colName === colName2) continue;
-                const cell2 = colName2 + rowName;
-                console.log("1:" + this.data[cell] + " 2:" + this.data[cell2]);
-                if (this.data[cell2] === undefined) continue;
-                if (this.data[cell] === this.data[cell2]) return false;
-            }
+
+            if (this.data[cell] == undefined) continue;
+
+            if (set.has(this.data[cell])) return false;
+            set.add(this.data[cell]);
+            console.log(set);
+            console.log("row " + rowName + " is valid");
         }
         return true;
     }
 
     isValidCols() {
         for (let colName of colNames) {
-            if (this.isValidCol(colName) === false) return false;
+            if (this.isValidCol(colName) == false) return false;
         }
         return true;
     }
     isValidCol(colName) {
         console.log("Checking col " + colName);
+        const set = new Set();
         for (let rowName of rowNames) {
             const cell = colName + rowName;
-            if (this.data[cell] === undefined) continue;
-            for (let rowName2 of rowNames) {
-                if (rowName === rowName2) continue;
-                const cell2 = colName + rowName2;
-                if (this.data[cell2] === undefined) continue;
-                if (this.data[cell2] === this.data[cell]) return false;
-                console.log("1:" + this.data[cell] + " 2:" + this.data[cell]);
+            if (this.data[cell] == undefined) continue;
+            if (set.has(this.data[cell])) {
+                console.log("col " + colName + " is invalid");
+                return false;
             }
+            set.add(this.data[cell]);
+            console.log(set);
         }
         return true;
     }
+
     isValidSquares() {
         for (let i = 1; i <= 9; i++) {
             if (this.isValidSquare(i) === false) return false;
         }
         return true;
     }
+
     isValidSquare(num) {
         const keys = getSubGridKeys(num);
         for (let i = 0; i < keys.length; i++) {
+            const set = new Set();
             for (let j = 0; j < keys.length; j++) {
-                if (i === j) continue;
-                if (this.data[keys[i]] === undefined) continue;
-                if (this.data[keys[j]] === undefined) continue;
-                if (this.data[keys[i]] === this.data[keys[j]]) return false;
+                const cell = keys[j];
+                if (this.data[cell] == undefined) continue;
+                if (set.has(this.data[cell])) return false;
+                set.add(this.data[cell]);
             }
         }
         return true;
@@ -207,15 +209,15 @@ class Grid {
 
     isValid() {
         if (this.isValidRows() === false) {
-            console.log("Grid is invalid");
+            console.log("Rows are invalid");
             return false;
         }
         if (this.isValidCols() === false) {
-            console.log("Grid is invalid");
+            console.log("Cols are invalid");
             return false;
         }
         if (this.isValidSquares() === false) {
-            console.log("Grid is invalid");
+            console.log("Squares are invalid");
             return false;
         }
         console.log("Grid is valid");
