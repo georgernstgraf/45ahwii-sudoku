@@ -14,6 +14,7 @@ async function sudoku2js(fileName) {
         }
 
         const sudokuArray = lines.map(line => {
+            line = line.replaceAll(' ', '');
             if (line.length !== 9) {
                 throw new Error('Assertion failed: each row should have 9 columns');
             }
@@ -28,4 +29,4 @@ async function sudoku2js(fileName) {
     }
 }
 
-module.exports = { sudoku2js };
+module.exports = sudoku2js;
