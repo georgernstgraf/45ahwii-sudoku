@@ -1,4 +1,4 @@
-const fs = require('fs');
+const fs = require('fs').promises; 
 const path = require('path');
 
 async function sudoku2js(fileName) {
@@ -18,35 +18,12 @@ async function sudoku2js(fileName) {
             });
         });
 
-        return jsonObject;
+        
+        await fs.writeFile(path.join(__dirname, 'output.json'), JSON.stringify(jsonObject, null, 2), 'utf8');
+        console.log('Konvertierung erfolgreich!');
     } catch (err) {
         console.error('Fehler beim Lesen der Datei:', err);
-        return {};
     }
 }
 
-async function readFilesFromDirectory(directoryPath) {
-    const directoryPath = path.join(__dirname, '../beispiele'); // Ersetzen Sie '../beispiele' durch den Pfad zu Ihrem Verzeichnis
-const files = fs.readdirSync(directoryPath);
-
-files.forEach(file => {
-    console.log(file);
-});
-}
-        
-async function convertTxtToJson() {
-    const fileName = path.join(__dirname, '../beispiele/digitalgalaxus.txt'); // Ersetzen Sie 'digitalgalaxus.txt' durch den Namen Ihrer Datei
-
-    try {
-        const jsonObject = await sudoku2js(fileName);
-        console.log(jsonObject);
-    } catch (err) {
-        console.error('Fehler beim Umwandeln der Datei in JSON:', err);
-    }
-}
-
-convertTxtToJson();
-// const directoryPath = path.join(__dirname, '../beispiele'); // Ersetzen Sie '../beispiele' durch den Pfad zu Ihrem Verzeichnis
-readFilesFromDirectory(directoryPath);
-
-module.exports = sudoku2js;
+sudoku2js(path.join(__dirname, 'fastleer.txt')).then(console.log).catch(console.error);

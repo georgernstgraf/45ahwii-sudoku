@@ -27,7 +27,7 @@ function solveObvSudoku() {
             return keys;
 
         }
-        console.log(getSubGridKeys(9));
+        console.log(getSubGridKeys(1));
 
 });
 

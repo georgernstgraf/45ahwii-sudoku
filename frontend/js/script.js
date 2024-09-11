@@ -55,6 +55,8 @@ async function fetchSudoku(url) {
     state.sudoku = sudoku;
 }
 
+
+
 // 3 - dom node refs
 const error$ = document.getElementById("error");
 const sudokuGrid$ = document.getElementById("sudoku-container");
@@ -83,6 +85,8 @@ function displayNextStep() {
 }
 // 6 Event Handlers
 async function onSelectSudoku() {
+
+    
     const url = beispieleSelect$.value;
     console.log("now fetching: ", url);
     state.error = "now fetching";

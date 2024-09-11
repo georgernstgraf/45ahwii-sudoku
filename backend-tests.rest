@@ -9,4 +9,5 @@ GET http://localhost:1234/beispieleJSON/unsolvedSudoku3
 ###
 GET http://localhost:1234/index.html
 
-
+###
+GET http://localhost:1234/beispieleTXT/sudoku-kurier-568a
