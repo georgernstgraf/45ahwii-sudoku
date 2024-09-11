@@ -11,3 +11,7 @@ GET http://localhost:1234/index.html
 
 ###
 GET http://localhost:1234/beispieleTXT/sudoku-kurier-568a
+
+
+###
+GET http://localhost:1234/beispieleTXT/sudoku-kurier-568b

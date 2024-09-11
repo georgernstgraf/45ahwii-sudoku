@@ -1,4 +1,6 @@
 const fs = require('fs/promises');
+
+
 function fileName2Path(fileName) {
     if (fileName.toLowerCase().endsWith('.json')) {
         return `/beispieleJSON/${fileName.substring(0, fileName.length - 5)}`;

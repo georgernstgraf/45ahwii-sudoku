@@ -3,50 +3,29 @@ const path = require('path');
 
 async function sudoku2js(fileName) {
     try {
-        const data = await fs.readFile(fileName, 'utf8');
-        const lines = data.split('\n');
-        const jsonObject = {};
+        const filePath = path.join(__dirname, '../beispiele', `${fileName}.txt`);
+        const data = await fs.readFile(filePath, 'utf8');
+        console.log('__________________________');
+        console.log('Loaded data:', data); // Debugging-Ausgabe
 
-        lines.forEach(line => {
-            const [key, value] = line.split(':').map(item => item.trim());
-            if (key && value) {
-                jsonObject[key] = value;
-            }
-        });
-
-        return jsonObject;
-    } catch (err) {
-        console.error('Fehler beim Lesen der Datei:', err);
-        return {};
-    }
-}
-
-async function readFilesFromDirectory(directoryPath) {
-    try {
-        const files = await fs.readdir(directoryPath);
-        const results = [];
-
-        for (const file of files) {
-            const filePath = path.join(directoryPath, file);
-            const fileStats = await fs.stat(filePath);
-
-            if (fileStats.isFile() && path.extname(filePath) === '.txt') {
-                const result = await sudoku2js(filePath);
-                results.push(result);
-            }
+        const lines = data.split('\n').filter(line => line.trim() !== '');
+        if (lines.length !== 9) {
+            throw new Error('Assertion failed: need 9 rows');
         }
 
-        return results;
+        const sudokuArray = lines.map(line => {
+            if (line.length !== 9) {
+                throw new Error('Assertion failed: each row should have 9 columns');
+            }
+            return line.split('').map(char => (char === '.' ? 0 : parseInt(char, 10)));
+        });
+
+        console.log('Parsed JSON:', sudokuArray); // Debugging-Ausgabe
+        return sudokuArray;
     } catch (err) {
-        console.error('Fehler beim Lesen des Verzeichnisses:', err);
+        console.error('Fehler beim Lesen der Datei:', err);
         return [];
     }
 }
 
-(async () => {
-    const directoryPath = path.join(__dirname, '../beispiele'); 
-    const results = await readFilesFromDirectory(directoryPath);
-    console.log(results);
-})();
-
-module.exports = sudoku2js;
+module.exports = { sudoku2js };
