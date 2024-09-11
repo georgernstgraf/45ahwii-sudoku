@@ -13,7 +13,7 @@ body {
     /* background-color: #444; */
     padding: 10px;
     gap: 0.5rem;
-    
+
 }
 
 .subgrid {
@@ -23,6 +23,7 @@ body {
     grid-template-rows: 1fr 1fr 1fr;
     gap: 0.25rem;
     background-color: #0f0;
+
 }
 
 .grid-item {
@@ -44,9 +45,78 @@ body {
     
 }
 
-@media (max-width:850px) {
+@media (max-width: 850px) {
     .row {
         flex-direction: column;
     }
-
+}
+.recursionDepth-1 {
+    background-color: seashell;
+    border: 1px solid #000000;
+    padding-top: 25%;
+    /* font-size: 30px; */
+    text-align: center;
+}
+.recursionDepth-2 {
+    background-color: peachpuff;
+    border: 1px solid #000000;
+    padding-top: 25%;
+    /* font-size: 30px; */
+    text-align: center;
+}
+.recursionDepth-3 {
+    background-color: sandybrown;
+    border: 1px solid #000000;
+    padding-top: 25%;
+    /* font-size: 30px; */
+    text-align: center;
+}
+.recursionDepth-4 {
+    background-color: chocolate;
+    border: 1px solid #000000;
+    padding-top: 25%;
+    /* font-size: 30px; */
+    text-align: center;
+}
+.recursionDepth-5 {
+    background-color: saddlebrown;
+    border: 1px solid #000000;
+    padding-top: 25%;
+    /* font-size: 30px; */
+    text-align: center;
+}
+.recursionDepth-6 {
+    background-color: saddlebrown;
+    border: 1px solid #000000;
+    padding-top: 25%;
+    /* font-size: 30px; */
+    text-align: center;
+}
+.recursionDepth-7 {
+    background-color: saddlebrown;
+    border: 1px solid #000000;
+    padding-top: 25%;
+    /* font-size: 30px; */
+    text-align: center;
+}
+.recursionDepth-8 {
+    background-color: saddlebrown;
+    border: 1px solid #000000;
+    padding-top: 25%;
+    /* font-size: 30px; */
+    text-align: center;
+}
+.recursionDepth-9 {
+    background-color: saddlebrown;
+    border: 1px solid #000000;
+    padding-top: 25%;
+    /* font-size: 30px; */
+    text-align: center;
+}
+.recursionDepth-10 {
+    background-color: saddlebrown;
+    border: 1px solid #000000;
+    padding-top: 25%;
+    /* font-size: 30px; */
+    text-align: center;
 }

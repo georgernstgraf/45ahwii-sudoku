@@ -13,19 +13,17 @@
     { yield `${colLabels[colIdx]}${rowLabels[rowIdx]}`; colIdx++; if (colIdx==9)
     { colIdx=0; rowIdx++; } if (rowIdx==9) break; } } nameIter=nextName();%>
 
-    <body data-bs-theme="dark" class="container">
+    <body data-bs-theme="light" class="container">
         <h1 class="text-center mx-auto my-3">grid</h1>
         <div
             class="grid text-center m-auto border border-primary rounded-1 p-1"
-            style="width: min(var(--pct-w), var(--pct-h)); aspect-ratio: 1"
-        >
+            style="width: min(var(--pct-w), var(--pct-h)); aspect-ratio: 1">
             <%_ for( let i=0; i < 81; i++ ) { const
             cellname=nameIter.next().value _%>
             <div
                 class="border border-danger"
                 style="align-content: center"
-                id="<%= cellname %>"
-            >
+                id="<%= cellname %>">
                 <%= cellname %>
             </div>
             <%_ } _%>
