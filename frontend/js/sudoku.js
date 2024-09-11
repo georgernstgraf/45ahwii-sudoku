@@ -10,6 +10,7 @@ class Sudoku {
         this.recursionDepth = recursionDepth;
         this.state = state;
     }
+
     solveObvious() {
         // so lange obviuos felder befüllen bis sich nix mehr tut
         // a) massimo  // TODO fehler in schleife
@@ -84,6 +85,10 @@ class Sudoku {
         );
         for (let pos in this.grid.data) {
             domNode.querySelector(`#${pos}`).innerText = this.grid.data[pos];
+        }
+        for (let pos in this.grid.data) {
+            const yo = document.getElementById(`#${pos}`);
+            yo.classList = "recursionDepth-" + this.recursionDepth;
         }
     }
 }
@@ -205,26 +210,25 @@ class Grid {
     }
 
     isValid() {
-        if (!this.isValidRows()) {
-            console.log("Grid is invalid");
-            if (this.isValidRows() === false) {
-                console.log("Rows are invalid");
-                return false;
-            }
-            if (this.isValidCols() === false) {
-                console.log("Cols are invalid");
-                return false;
-            }
-            if (this.isValidSquares() === false) {
-                console.log("Squares are invalid");
-                return false;
-            }
-            console.log("Grid is valid");
-            return true;
+        if (this.isValidRows() === false) {
+            console.log("Rows are invalid");
+
+            return false;
         }
+        if (this.isValidCols() === false) {
+            console.log("Cols are invalid");
+            return false;
+        }
+        if (this.isValidSquares() === false) {
+            console.log("Squares are invalid");
+            return false;
+        }
+        console.log("Grid is valid");
+        return true;
     }
-    const myExports = { Sudoku, Cell, colNames, rowNames, Grid };
-    if(typeof window != "undefined") {
+}
+const myExports = { Sudoku, Cell, colNames, rowNames, Grid };
+if (typeof window != "undefined") {
     // browser
     Object.assign(window, myExports);
 } else {

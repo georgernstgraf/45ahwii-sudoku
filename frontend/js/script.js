@@ -76,6 +76,7 @@ function render() {
     }
     error$.innerText = state.error;
 }
+
 function displaySudoku(sudoku) {
     sudoku.renderInto(sudokuGrid$);
 }
