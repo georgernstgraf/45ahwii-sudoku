@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 body {
     font-family: 'Roboto', sans-serif;
     margin: 0;
@@ -6,14 +7,99 @@ body {
     color: white;
 }
 
+=======
+:root {
+    --bg-color: #f8f5f5;
+    --text-color: #000000;
+    --grid-bg-color: #5f5f5f;
+    --subgrid-bg-color: #bababa;
+    --grid-item-bg-color: #ffffff;
+    
+    --button-light-bg: #3a3a3a;
+    --button-light-text: #ffffff;
+    --button-dark-bg: #474343;
+    --button-dark-text: #ffffff;
+
+    --button-container1: #f8f8f8;
+    --button-container2: rgb(251, 251, 251);
+    --button-container3: #a6a6a6;
+    --button-container4: #ffffff;
+    --button-container5: #ffffff;
+    --button-container6: #9e9595;
+    --button-container7: #ffffff;
+    --button-container8: rgb(0, 0, 0);
+}
+
+[data-theme='dark'] {
+    /* sudoku farben */
+    --bg-color: #151515;
+    --text-color: #ffffff;
+    --grid-bg-color: #797979;
+    --subgrid-bg-color: #ada8a8;
+    --grid-item-bg-color: #303030;
+
+    /*für den button*/
+    --button-light-bg: #555555;
+    --button-light-text: #ffffff;
+    --button-dark-bg: #ffffff;
+    --button-dark-text: #000000;
+
+    /* Hintergrund für den container */
+    --button-container1: #484c58;
+    --button-container2: rgb(43, 42, 42);
+    --button-container3: #e5e5e5;
+    --button-container4: #ffffff;
+    --button-container5: #000000;
+    --button-container6: #8c8c8c;
+    --button-container7: #f1f1f1;
+    --button-container8: rgb(248, 248, 248);
+
+}
+
+h1{
+    font-family: 'Roboto Mono', monospace;
+    font-weight: 800;
+}
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    
+}
+.button-container
+{
+    background-color:var(--button-container2);
+    font-family: 'Roboto Mono'
+
+}
+button{
+    background-color: var(--button-container1);
+    border-radius: 5px;
+    padding:1px 20px;
+    cursor: pointer; 
+    transition: background-color 0.3s ease; 
+    color: var(--button-container8);
+}
+
+button:hover {
+    background-color: var(--button-container3); 
+    border-color: var(--button-container4); 
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); 
+    color: var(--button-container5); 
+}
+>>>>>>> Stashed changes
 .grid-container {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;
-    /* background-color: #444; */
     padding: 10px;
+<<<<<<< Updated upstream
     gap: 0.5rem;
 
+=======
+    gap: 0.4rem;
+    background-color: var(--grid-bg-color);
+  
+>>>>>>> Stashed changes
 }
 
 .subgrid {
@@ -21,6 +107,7 @@ body {
     aspect-ratio: 1;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;
+<<<<<<< Updated upstream
     gap: 0.25rem;
     background-color: #0f0;
 
@@ -29,10 +116,26 @@ body {
 .grid-item {
     background-color: #212121;
     border: 1px solid #000000;
+=======
+    gap: .1rem;
+    border: 1px solid var(--button-container6);
+    background-color: var(--subgrid-bg-color);
+   
+    
+}
+
+.grid-item {
+    background-color: var(--grid-item-bg-color);
+    border: 1px solid var(--button-container7);
+>>>>>>> Stashed changes
     padding-top: 25%;
-    /* font-size: 30px; */
     text-align: center;
+<<<<<<< Updated upstream
     color : white;
+=======
+    font-size: 20px;
+       
+>>>>>>> Stashed changes
 }
 
 .button-container {
@@ -45,11 +148,35 @@ body {
     
 }
 
+<<<<<<< Updated upstream
 @media (max-width: 850px) {
+=======
+#theme-toggle {
+    transition: background-color 0.3s, color 0.3s;
+    background-color: var(--button-light-bg);
+    color: var(--button-light-text);
+}
+
+#theme-toggle[data-theme='dark'] {
+    background-color: var(--button-dark-bg);
+    color: var(--button-dark-text);
+    display: flex;
+    justify-content: flex-end;
+    
+}
+
+#theme-toggle:hover {
+    background-color: var(--button-light-bg);
+    color: var(--button-light-text);
+}
+
+@media (max-width:850px) {
+>>>>>>> Stashed changes
     .row {
         flex-direction: column;
     }
 }
+<<<<<<< Updated upstream
 .recursionDepth-1 {
     background-color: seashell;
     border: 1px solid #000000;
@@ -120,3 +247,5 @@ body {
     /* font-size: 30px; */
     text-align: center;
 }
+=======
+>>>>>>> Stashed changes
