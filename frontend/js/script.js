@@ -1,6 +1,7 @@
 // do whatever you like with the solutions
 const state = { error: "OK" };
 function initGrid() {
+    //Matthias war hier
     state.sudoku = null;
     const grid = sudokuGrid$;
     Array.from(sudokuGrid$.children).forEach(c => c.remove());
