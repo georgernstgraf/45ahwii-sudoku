@@ -13,8 +13,8 @@ async function sudoku2js(fileName) {
             throw new Error('Assertion failed: need 9 rows');
         }
 
-        const sudokuArray = lines.map(line => {
-            line = line.replaceAll(' ', '');
+         const sudokuArray = lines.map(line => {
+            line = line.replace(/\s+/g, '');
             if (line.length !== 9) {
                 throw new Error('Assertion failed: each row should have 9 columns');
             }
