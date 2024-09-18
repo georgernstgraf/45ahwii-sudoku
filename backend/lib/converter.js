@@ -1,24 +1,19 @@
 const fs = require('fs').promises;
 const path = require('path');
 
-async function sudoku2js(fileName) {
-    try {
-        const data = await fs.readFile(fileName, 'utf8');
-        const lines = data.split('\n');
-        const jsonObject = {};
+async function converter(fileName) {
+    const data = await fs.readFile(`../beispiele/${fileName}.txt`, 'utf8');
+    let lines = data.split('\n');
+    let returnVal = [];
 
-        lines.forEach(line => {
-            const [key, value] = line.split(':').map(item => item.trim());
-            if (key && value) {
-                jsonObject[key] = value;
-            }
-        });
-
-        return jsonObject;
-    } catch (err) {
-        console.error('Fehler beim Lesen der Datei:', err);
-        return {};
-    }
+    lines.forEach(line => {
+        line = line.trim();
+        line = line.replace(/\s+/g, '');
+        line = line.replace(/\./g, '0');
+        returnVal.push(line);
+    });
+    returnVal = returnVal.filter(l => l.length == 9);
+    return returnVal;
 }
 
 async function readFilesFromDirectory(directoryPath) {
@@ -31,7 +26,7 @@ async function readFilesFromDirectory(directoryPath) {
             const fileStats = await fs.stat(filePath);
 
             if (fileStats.isFile() && path.extname(filePath) === '.txt') {
-                const result = await sudoku2js(filePath);
+                const result = await converter(filePath);
                 results.push(result);
             }
         }
@@ -49,4 +44,4 @@ async function readFilesFromDirectory(directoryPath) {
 //     console.log(results);
 // })();
 
-module.exports = sudoku2js;
+module.exports = converter;;

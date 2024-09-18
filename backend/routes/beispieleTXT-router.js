@@ -1,4 +1,4 @@
-const { assert } = require('console');
+const assert = require('assert');
 const express = require('express');
 const fs = require('fs/promises');
 const router = express.Router();
@@ -7,13 +7,13 @@ const converter = require('../lib/converter.js');
 
 router.get('/:fileName', async (req, res) => {
     let content;
-    const response = {};
+    const digits = /^[0-9]+$/;
     try {
-        content = await converter(req.params.fileName);
+        content = await converter(req.params.fileName);  // 9-array of 9-strngs
         assert(content instanceof Array, "should be an array");
         assert(content.length == 9, "need 9 rows");
         assert(content.every(row => row.length == 9), "need 9 columns");
-        assert(content.every(row => row.every(cell => cell >= 0 && cell <= 9)), "number must be between 0 and 9 inclusive");
+        assert(content.every(row => digits.test(row)), "number must be between 0 and 9 inclusive");
     } catch (err) {
         return res.status(404).send(err.message);
     }
@@ -21,6 +21,7 @@ router.get('/:fileName', async (req, res) => {
 
     const colNames = sudoku.colNames;
     const rowNames = sudoku.rowNames;
+    const response = {};
     for (let row = 0; row < content.length; row++) {
         for (let col = 0; col < content[row].length; col++) {
             if (content[row][col] == 0) {
