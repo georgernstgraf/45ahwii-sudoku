@@ -3,7 +3,7 @@ const express = require('express');
 const fs = require('fs/promises');
 const router = express.Router();
 const sudoku = require('../../frontend/js/sudoku.js');
-const converter = require('../../backend/converter.js');
+const converter = require('../lib/converter.js');
 
 router.get('/:fileName', async (req, res) => {
     let content;

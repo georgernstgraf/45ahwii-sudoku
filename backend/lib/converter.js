@@ -43,10 +43,10 @@ async function readFilesFromDirectory(directoryPath) {
     }
 }
 
-(async () => {
-    const directoryPath = path.join(__dirname, '../beispiele'); 
-    const results = await readFilesFromDirectory(directoryPath);
-    console.log(results);
-})();
+// (async () => {
+//     const directoryPath = path.join(__dirname, '../../beispiele');
+//     const results = await readFilesFromDirectory(directoryPath);
+//     console.log(results);
+// })();
 
 module.exports = sudoku2js;

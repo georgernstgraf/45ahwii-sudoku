@@ -4,7 +4,7 @@
     "main": "frontend/index.js",
     "scripts": {
         "start": "cd backend; node app.js",
-        "test": "node --inspect --watch app.js"
+        "test": "cd backend; node --inspect --watch app.js"
     },
     "keywords": [],
     "author": "Georg Graf <grafg@spengergasse.at> (SPG)",
