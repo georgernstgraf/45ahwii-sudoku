@@ -1,22 +1,22 @@
 {
-	"name": "sudoku",
-	"version": "1.0.0",
-	"main": "frontend/index.js",
-	"scripts": {
-		"start": "node backend/app.js",
-		"test": "node --inspect --watch app.js"
-	},
-	"keywords": [],
-	"author": "Georg Graf <grafg@spengergasse.at> (SPG)",
-	"license": "ISC",
-	"dependencies": {
-		"ejs": "^3.1.10",
-		"express": "^4.20.0",
-		"fs": "^0.0.1-security",
-		"node-fetch": "^3.3.2"
-	},
-	"directories": {
-		"lib": "lib"
-	},
-	"description": ""
+    "name": "sudoku",
+    "version": "1.0.0",
+    "main": "frontend/index.js",
+    "scripts": {
+        "start": "cd backend; node app.js",
+        "test": "node --inspect --watch app.js"
+    },
+    "keywords": [],
+    "author": "Georg Graf <grafg@spengergasse.at> (SPG)",
+    "license": "ISC",
+    "dependencies": {
+        "ejs": "^3.1.10",
+        "express": "^4.20.0",
+        "fs": "^0.0.1-security",
+        "node-fetch": "^3.3.2"
+    },
+    "directories": {
+        "lib": "lib"
+    },
+    "description": ""
 }
