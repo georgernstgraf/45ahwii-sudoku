@@ -2,6 +2,7 @@
 const path = require("path");
 const express = require("express");
 const beispieleJSON = require("./routes/beispieleJSON-router.js");
+const beispieleTXT = require("./routes/beispieleTXT-router.js");
 const { beispiele } = require("./lib/beispiele-list");
 
 // Create the express app
@@ -22,7 +23,7 @@ app.get(["/", "/index.html"], async (req, res) => {
 });
 
 app.use("/beispieleJSON", beispieleJSON);
-// app.use('/beispieleTXT', beispieleTXT);
+app.use('/beispieleTXT', beispieleTXT);
 app.use("", express.static("../frontend"));
 // Error handlers als Letzte
 app.use(function fourOhFourHandler(req, res) {
