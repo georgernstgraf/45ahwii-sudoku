@@ -1,44 +1,38 @@
 const fs = require('fs');
-
-const data = fs.readFileSync('C:\\Users\\rober\\Documents\\SWP Sudoko\\45ahwii-sudoku-1\\frontend\\js\\unsolvedSudoku3.json', 'utf8');
+const data = fs.readFileSync('C:\\Users\\rober\\Documents\\SWP Sudoko\\45ahwii-sudoku-1\\frontend\\js\\unsolvedSudoku4.json', 'utf8');
 const board = JSON.parse(data);
+let EmptyCells;
 
-function printBoard(board) {
+function printBoard() {
     for (let row of board) {
         console.log(row.join(' '));
     }
 }
 
-let EmptyCells = [];
- 
-function findEmpty(board) {
-   
-    
+function populateEmptyCells() {
+    EmptyCells = [];
     for (let row = 0; row < 9; row++) {
         for (let col = 0; col < 9; col++) {
             if (board[row][col] === 0) {
                 EmptyCells.push([row, col]);
-                
             }
         }
     }
-    return EmptyCells;
-
 }
 
-function isPossible(board, num, pos) {
-
-    const [row, col] = pos;
-    
+function isPossible(num, pos) {
+    const { row, col } = pos;
+    // check whether num is already in row
     for (let i = 0; i < board[row].length; i++) {
-        if (board[row][i] === num && i !== col) {
+        if (i == col) continue;
+        if (board[row][i] === num) {
             return false;
         }
     }
-                                                 
-  
+    // check whether num is already in col
     for (let i = 0; i < board.length; i++) {
-        if (board[i] [col] === num && i !== row) {
+        if (i == row) continue;
+        if (board[i][col] === num) {
             return false;
         }
     }
@@ -51,49 +45,35 @@ function isPossible(board, num, pos) {
             }
         }
     }
-    return true;	
+    return true;
 }
 
-function solveSudoku(board) {
+function setNumber(num, pos) {
+    const { row, col } = pos;
+    board[row][col] = num;
+}
 
-    findEmpty(board);
-
-    function setNumbers(index) {
-        
-        if (index === EmptyCells.length) {
-            return true;
-        }
-
-        const [row, col] = EmptyCells[index];
-
-      
-        for (let num = 1; num <= 9; num++) {
-            if (isPossible(board, num, [row, col])) {
-                board[row][col] = num;
-
-               
-                if (setNumbers(index + 1)) {
-                    return true;
+function setObviousNumbers() {
+    let foundCount;
+    let round = 0;
+    do {
+        foundCount = 0;
+        populateEmptyCells();
+        for (let [row, col] of EmptyCells) {
+            for (let num = 1; num <= 9; num++) {
+                if (isPossible(num, { row, col })) {
+                    foundCount++;
+                    setNumber(num, { row, col });
                 }
-
-              
-                board[row][col] = 0;
             }
         }
-
-        return false; 
-    }
-
-    return setNumbers(0);
+        round++;
+        console.log(`Round ${round}: found ${foundCount} new numbers`);
+    } while (foundCount > 0);
 }
-
-
-
-
-if (solveSudoku(board)) {
-    console.log("Sudoku gelöst:");
-    printBoard(board);
-} else {
-    console.log("Keine Lösung gefunden");
+function solveSudoku() {
+    setObviousNumbers();
 }
-
+printBoard();
+solveSudoku();
+printBoard();
