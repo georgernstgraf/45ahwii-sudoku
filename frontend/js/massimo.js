@@ -13,6 +13,7 @@ let EmptyCells = [];
  
 function findEmpty(board) {
    
+    
     for (let row = 0; row < 9; row++) {
         for (let col = 0; col < 9; col++) {
             if (board[row][col] === 0) {
@@ -37,7 +38,7 @@ function isPossible(board, num, pos) {
                                                  
   
     for (let i = 0; i < board.length; i++) {
-        if (board[col][i] === num && i !== row) {
+        if (board[i] [col] === num && i !== row) {
             return false;
         }
     }
@@ -54,24 +55,38 @@ function isPossible(board, num, pos) {
 }
 
 function solveSudoku(board) {
-   
+
     findEmpty(board);
 
-    function setNumbers() {
-        for (let [row, col] of EmptyCells) {
-            for (let num = 1; num <= 9; num++) {
-                if (isPossible(board, num, [row, col])) {
-                    board[row][col] = num;
-   
-                }
-            }
-            return false; 
+    function setNumbers(index) {
+        
+        if (index === EmptyCells.length) {
+            return true;
         }
-        return true; 
+
+        const [row, col] = EmptyCells[index];
+
+      
+        for (let num = 1; num <= 9; num++) {
+            if (isPossible(board, num, [row, col])) {
+                board[row][col] = num;
+
+               
+                if (setNumbers(index + 1)) {
+                    return true;
+                }
+
+              
+                board[row][col] = 0;
+            }
+        }
+
+        return false; 
     }
 
-    return setNumbers();
+    return setNumbers(0);
 }
+
 
 
 
