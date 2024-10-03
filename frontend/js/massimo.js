@@ -1,5 +1,5 @@
 const fs = require('fs');
-const data = fs.readFileSync('C:\\Users\\rober\\Documents\\SWP Sudoko\\45ahwii-sudoku-1\\frontend\\js\\unsolvedSudoku4.json', 'utf8');
+const data = fs.readFileSync('C:\\Users\\rober\\Documents\\SWP Sudoko\\45ahwii-sudoku-1\\frontend\\js\\unsolvedSudoku5.json', 'utf8');
 const board = JSON.parse(data);
 let EmptyCells;
 
@@ -29,7 +29,7 @@ function isPossible(num, pos) {
             return false;
         }
     }
-    // check whether num is already in col
+    
     for (let i = 0; i < board.length; i++) {
         if (i == row) continue;
         if (board[i][col] === num) {
@@ -58,19 +58,30 @@ function setObviousNumbers() {
     let round = 0;
     do {
         foundCount = 0;
-        populateEmptyCells();
+        populateEmptyCells(); 
         for (let [row, col] of EmptyCells) {
+            let possibleNumbers = [];
+
+
             for (let num = 1; num <= 9; num++) {
                 if (isPossible(num, { row, col })) {
-                    foundCount++;
-                    setNumber(num, { row, col });
+                    possibleNumbers.push(num);
                 }
+            }
+
+
+            if (possibleNumbers.length === 1) {
+                let num = possibleNumbers[0];
+                setNumber(num, { row, col });
+                foundCount++;
             }
         }
         round++;
         console.log(`Round ${round}: found ${foundCount} new numbers`);
     } while (foundCount > 0);
 }
+
+
 function solveSudoku() {
     setObviousNumbers();
 }
