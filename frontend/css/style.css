@@ -49,14 +49,17 @@ h1 {
     font-family: "Roboto Mono", monospace;
     font-weight: 800;
 }
+
 body {
     background-color: var(--bg-color);
     color: var(--text-color);
 }
+
 .button-container {
     background-color: var(--button-container2);
     font-family: "Roboto Mono";
 }
+
 button {
     background-color: var(--button-container1);
     border-radius: 5px;
@@ -72,6 +75,7 @@ button:hover {
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
     color: var(--button-container5);
 }
+
 .grid-container {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -94,9 +98,9 @@ button:hover {
 .grid-item {
     background-color: var(--grid-item-bg-color);
     border: 1px solid var(--button-container7);
-    padding-top: 25%;
+    padding-top: 15%;
     text-align: center;
-    font-size: 20px;
+    font-size: 30px;
 }
 
 .button-container {
