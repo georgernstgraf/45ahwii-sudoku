@@ -1,5 +1,5 @@
 const fs = require('fs');
-const data = fs.readFileSync('C:\\Users\\rober\\Documents\\SWP Sudoko\\45ahwii-sudoku-1\\frontend\\js\\unsolvedSudoku5.json', 'utf8');
+const data = fs.readFileSync('C:\\Users\\rober\\Documents\\SWP Sudoko\\45ahwii-sudoku-1\\frontend\\js\\unsolvedSudoku4.json', 'utf8');
 const board = JSON.parse(data);
 let EmptyCells;
 
@@ -78,13 +78,52 @@ function setObviousNumbers() {
         }
         round++;
         console.log(`Round ${round}: found ${foundCount} new numbers`);
+        if (round = 2 && foundCount == 0) {
+            console.log('No solution found with Obvious \nContinue with Recursion method');
+        }
     } while (foundCount > 0);
 }
 
 
+
+function solveBacktracking() {
+    populateEmptyCells();
+
+    function backtrack(index) {
+        if (index === EmptyCells.length) {
+            return true;
+        }
+
+        let [row, col] = EmptyCells[index];
+
+        for (let num = 1; num <= 9; num++) {
+            if (isPossible(num, { row, col })) {
+                setNumber(num, { row, col });
+
+
+                if (backtrack(index + 1)) {
+                    return true;
+                }
+
+
+                setNumber(0, { row, col });
+            }
+        }
+        return false;
+    }
+
+    return backtrack(0);
+}
+
 function solveSudoku() {
     setObviousNumbers();
+    if (!solveBacktracking()) {
+        console.log("No solution found");
+    } else {
+        console.log("Sudoku solved!");
+    }
 }
+
 printBoard();
 solveSudoku();
 printBoard();
