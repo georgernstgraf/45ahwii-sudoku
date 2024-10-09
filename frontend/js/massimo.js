@@ -29,7 +29,7 @@ function isPossible(num, pos) {
             return false;
         }
     }
-    
+
     for (let i = 0; i < board.length; i++) {
         if (i == row) continue;
         if (board[i][col] === num) {
@@ -58,7 +58,7 @@ function setObviousNumbers() {
     let round = 0;
     do {
         foundCount = 0;
-        populateEmptyCells(); 
+        populateEmptyCells();
         for (let [row, col] of EmptyCells) {
             let possibleNumbers = [];
 
