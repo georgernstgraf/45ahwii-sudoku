@@ -1,28 +1,41 @@
-/* style.css */
-body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+body { 
+    font-family: Arial, sans-serif; 
+    padding: 20px; 
+    background-color:rgb(50, 67, 57); 
 }
-
-#sudoku-container {
-    display: grid;
-    grid-template-columns: repeat(9, 40px);
-    grid-gap: 5px;
+h1 { 
+    color: #fff; 
+    text-align: center;
 }
-
-.grid-item {
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
+table{ 
+    border-collapse: collapse; 
+    margin-bottom: 20px;
+    display:grid;
     justify-content: center;
-    border: 1px solid #ccc;
-    font-size: 24px;
+    align-items: center; 
 }
-
-button {
-    margin-top: 20px;
+td { 
+    width: 30px; 
+    height: 30px; 
+    text-align: center; 
+    border: 1px solid #fff;
+}
+td:nth-child(3n) { 
+    border-right: 4px solid #fff; 
+}
+tr:nth-child(3n) td { 
+    border-bottom: 3px solid #fff; 
+}
+input { 
+    width: 28px; 
+    height: 28px; 
+    text-align: center; 
+}
+button { 
     padding: 10px 20px;
+    align-items: center;
+}
+#button-container { 
+    display: flex; 
+    justify-content: center; 
 }
