@@ -1,4 +1,4 @@
-const fs = require('fs/promises');
+import fs from 'node:fs/promises';
 function fileName2Path(fileName) {
     if (fileName.toLowerCase().endsWith('.json')) {
         return `/beispieleJSON/${fileName.substring(0, fileName.length - 5)}`;
@@ -10,7 +10,7 @@ function fileName2Path(fileName) {
 }
 async function beispiele() {
     let content;
-    content = await fs.readdir('../beispiele/');
+    content = await fs.readdir('./beispiele/');
     const response = content.map(fileName => {
         return {
             name: fileName,
@@ -19,4 +19,4 @@ async function beispiele() {
     }).filter(x => x.url);
     return response;
 }
-module.exports = { beispiele };
+export { beispiele };

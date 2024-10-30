@@ -25,8 +25,7 @@ class Sudoku {
         const massimos = this.grid.cellCount() - countBefore;
         if (massimos > 0) {
             console.log(
-                `Massimo found ${massimos} new values / depth: ${
-                    this.#recursion_depth
+                `Massimo found ${massimos} new values / depth: ${this.#recursion_depth
                 }`
             );
         }
@@ -41,8 +40,7 @@ class Sudoku {
         const aminadreas = this.grid.cellCount() - countBefore;
         if (aminadreas > 0) {
             console.log(
-                `Amin / Andreas found ${aminadreas} new values / depth: ${
-                    this.#recursion_depth
+                `Amin / Andreas found ${aminadreas} new values / depth: ${this.#recursion_depth
                 }`
             );
         }
@@ -68,8 +66,7 @@ class Sudoku {
         const newCellCount = this.solveObvious();
         if (newCellCount > 0) {
             console.log(
-                `obvious found ${newCellCount} new values at depth ${
-                    this.#recursion_depth
+                `obvious found ${newCellCount} new values at depth ${this.#recursion_depth
                 }`
             );
         }
@@ -87,11 +84,9 @@ class Sudoku {
             (e) => (e.innerHTML = "")
         );
         for (let pos in this.grid.data) {
-            domNode.querySelector(`#${pos}`).innerText = this.grid.data[pos];
-        }
-        for (let pos in this.grid.data) {
-            const yo = document.getElementById(`#${pos}`);
-            yo.classList = "recursionDepth-" + this.recursionDepth;
+            const elt = domNode.querySelector(`#${pos}`);
+            elt.innerText = this.grid.data[pos];
+            // elt.classList = "recursionDepth-" + this.recursionDepth; TODO data-recursion=3
         }
     }
 }
@@ -139,7 +134,6 @@ class Grid {
         return true;
     }
     isValidRow(rowName) {
-        console.log("Checking row " + rowName);
         const set = new Set();
         for (let colName of colNames) {
             const cell = colName + rowName;
@@ -147,8 +141,6 @@ class Grid {
 
             if (set.has(this.data[cell])) return false;
             set.add(this.data[cell]);
-            console.log(set);
-            console.log("row " + rowName + " is valid");
         }
         return true;
     }
@@ -160,7 +152,6 @@ class Grid {
         return true;
     }
     isValidCol(colName) {
-        console.log("Checking col " + colName);
         const set = new Set();
         for (let rowName of rowNames) {
             const cell = colName + rowName;
@@ -170,7 +161,7 @@ class Grid {
                 return false;
             }
             set.add(this.data[cell]);
-            console.log(set);
+            // console.log(set);
         }
         return true;
     }
@@ -229,11 +220,12 @@ class Grid {
         return true;
     }
 }
-const myExports = { Sudoku, Cell, colNames, rowNames, Grid };
+
+const exportObj = { Sudoku, Cell, colNames, rowNames, Grid };
 if (typeof window != "undefined") {
-    // browser
-    Object.assign(window, myExports);
-} else {
-    // node
-    module.exports = myExports;
+    for (let i in exportObj) {
+        window[i] = exportObj[i];
+    }
 }
+
+export { Sudoku, Cell, colNames, rowNames, Grid };

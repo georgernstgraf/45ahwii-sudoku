@@ -1,14 +1,15 @@
-const { assert } = require('console');
-const express = require('express');
-const fs = require('fs/promises');
+import assert from 'node:assert';
+import * as express from 'npm:express';
+import { readFile } from 'node:fs/promises';
+
 const router = express.Router();
-const sudoku = require('../../frontend/js/sudoku.js');
+import * as sudoku from '../../frontend/js/sudoku.js';
 
 router.get('/:fileName', async (req, res) => {
     let content;
     const response = {};
     try {
-        content = await fs.readFile(`../beispiele/${req.params.fileName}.json`, 'utf8');
+        content = await readFile(`./beispiele/${req.params.fileName}.json`, 'utf8');
         content = JSON.parse(content);
         assert(content instanceof Array, "should be an array");
         assert(content.length == 9, "need 9 rows");
@@ -30,4 +31,4 @@ router.get('/:fileName', async (req, res) => {
     return res.json(response);
 });
 
-module.exports = router;
+export { router };

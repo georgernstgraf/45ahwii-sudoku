@@ -71,6 +71,7 @@ function render() {
         }
         catch (e) {
             state.error = e.message;
+            console.error(e);
         }
     }
     error$.innerText = state.error;
@@ -86,14 +87,16 @@ function displayNextStep() {
 // 6 Event Handlers
 async function onSelectSudoku() {
     const url = beispieleSelect$.value;
-    console.log("now fetching: ", url);
+    console.log("start fetching: ", url);
     state.error = "now fetching";
+    render();
     try {
         await fetchSudoku(url);
         state.error = "OK";
     }
     catch (e) {
         state.error = e.message;
+        console.error(e);
     };
     render();
 }

@@ -1,8 +1,8 @@
-const fs = require('fs').promises;
-const path = require('path');
+import { readFile } from 'node:fs/promises';
+import 'node:path';
 
 async function converter(fileName) {
-    const data = await fs.readFile(`../beispiele/${fileName}.txt`, 'utf8');
+    const data = await readFile(`./beispiele/${fileName}.txt`, 'utf8');  // probably TODO
     let lines = data.split('\n');
     let returnVal = [];
 
@@ -44,4 +44,4 @@ async function readFilesFromDirectory(directoryPath) {
 //     console.log(results);
 // })();
 
-module.exports = converter;;
+export { converter };

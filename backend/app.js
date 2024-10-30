@@ -1,15 +1,16 @@
 "use strict";
-const path = require("path");
-const express = require("express");
-const beispieleJSON = require("./routes/beispieleJSON-router.js");
-const beispieleTXT = require("./routes/beispieleTXT-router.js");
-const { beispiele } = require("./lib/beispiele-list");
+import * as path from "node:path";
+import express from "npm:express";
+import * as ejs from 'npm:ejs';
+import { router as beispieleJSON } from "./routes/beispieleJSON-router.js";
+import { router as beispieleTXT } from "./routes/beispieleTXT-router.js";
+import { beispiele } from "./lib/beispiele-list.js";
 
 // Create the express app
 const app = express();
 app.set("view engine", "html");
-app.engine("html", require("ejs").renderFile);
-app.set("views", path.join(__dirname, "../frontend/"));
+app.engine("html", ejs.renderFile);
+app.set("views", path.join(import.meta.dirname, "../frontend/"));
 // Routes and middleware
 // app.use(/* ... */)
 app.get(["/", "/index.html"], async (req, res) => {
@@ -24,7 +25,7 @@ app.get(["/", "/index.html"], async (req, res) => {
 
 app.use("/beispieleJSON", beispieleJSON);
 app.use('/beispieleTXT', beispieleTXT);
-app.use("", express.static("../frontend"));
+app.use("", express.static("./frontend"));
 // Error handlers als Letzte
 app.use(function fourOhFourHandler(req, res) {
 	res.status(404).send();
@@ -35,7 +36,7 @@ app.use(function fiveHundredHandler(err, req, res, next) {
 });
 
 // Start server
-app.listen(1234, function (err) {
+app.listen(1234, "0.0.0.0", function (err) {
 	if (err) {
 		return console.error(err);
 	}

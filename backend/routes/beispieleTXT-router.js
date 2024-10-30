@@ -1,9 +1,8 @@
-const assert = require('assert');
-const express = require('express');
-const fs = require('fs/promises');
+import assert from 'node:assert';
+import * as express from 'npm:express';
 const router = express.Router();
-const sudoku = require('../../frontend/js/sudoku.js');
-const converter = require('../lib/converter.js');
+import * as sudoku from '../../frontend/js/sudoku.js';
+import { converter } from '../lib/converter.js';
 
 router.get('/:fileName', async (req, res) => {
     let content;
@@ -33,4 +32,4 @@ router.get('/:fileName', async (req, res) => {
     return res.json(response);
 });
 
-module.exports = router;
+export { router };
