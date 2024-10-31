@@ -104,24 +104,30 @@ button:hover {
 }
 
 .button-container {
-    display: flex;
+    display: grid;
+    column-gap: 10px;
+    grid-template-columns: repeat(2, 1fr);
     justify-content: space-around;
     flex-direction: column;
     align-items: center;
     margin-top: 20px;
 }
 
+.button-container>* {
+    text-align: center
+}
+
 #theme-toggle {
     transition: background-color 0.3s, color 0.3s;
     background-color: var(--button-light-bg);
     color: var(--button-light-text);
+    grid-column-start: 2;
+    grid-row-start: 1;
 }
 
 #theme-toggle[data-theme="dark"] {
     background-color: var(--button-dark-bg);
     color: var(--button-dark-text);
-    display: flex;
-    justify-content: flex-end;
 }
 
 #theme-toggle:hover {

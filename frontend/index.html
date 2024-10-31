@@ -38,14 +38,28 @@
             <div class="button-container col mx-2 border rounded border-3">
                 <button id="theme-toggle"
                         class="btn btn-theme">
-                    Dark/Light
+                    Dark/Light Theme
                 </button>
-                <div class="output"
-                     id="count-solves">Solves count: /</div>
-                <div class="output"
-                     id="solves-max">Max solves:</div>
+                <div class="output">Solves count: <p id="solves-count-out"
+                       class="d-inline">0
+                    </p>
+                </div>
+                <div class="output">
+                    <label for="max-solves-in"
+                           class="form-label">Stop after <p class="d-inline"
+                           id="max-solves-out">0</p> Solutions</label>
+                    </input>
+                    <input type="range"
+                           class="form-range"
+                           min="1"
+                           max="10"
+                           step="1"
+                           id="max-solves-in"
+                           value="1">
+
+                </div>
+                <button id="start-solving">Start Solving</button>
                 <button id="watch-me-solve">Watch me solve</button>
-                <button id="show-solves">Show solved</button>
                 <div class="output"
                      id="steps-went">Steps went: /</div>
                 <div class="output"

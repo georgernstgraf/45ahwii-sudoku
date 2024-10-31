@@ -1,5 +1,16 @@
-// do whatever you like with the solutions
-const state = { error: "OK" };
+// 1: State
+const state = { maxSolutions: 1 };
+// 2: State access and mod
+function resetState() {
+    Object.assign(state, {
+        sudoku: null,
+        foundSolutions: [],
+        recursionDepth: 0,
+        allSteps: [],
+        intervalId: NaN,
+        error: "OK"
+    });
+}
 function initGrid() {
     //Matthias war hier
     state.sudoku = null;
@@ -35,16 +46,6 @@ function getSubGridKeys(num) {
     // console.log(keys);
     return keys;
 }
-function resetState() {
-    Object.assign(state, {
-        sudoku: null,
-        foundSolutions: [],
-        recursionDepth: 0,
-        maxSolutions: 7,
-        allSteps: [],
-        intervalId: NaN,
-    });
-}
 async function fetchSudoku(url) {
     const response = await fetch(url);
     if (!response.ok) {
@@ -60,6 +61,12 @@ async function fetchSudoku(url) {
 const error$ = document.getElementById("error");
 const sudokuGrid$ = document.getElementById("sudoku-container");
 const beispieleSelect$ = document.getElementById("beispieleSelect");
+const maxSolutionsIn$ = document.getElementById("max-solves-in");
+const maxSolutionsOut$ = document.getElementById("max-solves-out");
+const solvesCountOut$ = document.getElementById("solves-count-out");
+const startSolving$ = document.getElementById("start-solving");
+
+// 4 - dom node creation
 // 5 -render functions
 function render() {
     // den gesamten state in den div.
@@ -75,6 +82,13 @@ function render() {
         }
     }
     error$.innerText = state.error;
+    if (state.error == "OK") {
+        error$.classList.remove("bg-danger");
+    } else {
+        error$.classList.add("bg-danger");
+    }
+    maxSolutionsOut$.innerText = state.maxSolutions;
+
 }
 
 function displaySudoku(sudoku) {
@@ -100,8 +114,23 @@ async function onSelectSudoku() {
     };
     render();
 }
-
-// 7 - was war das noch?
+function onMaxSolutionsSlider() {
+    state.maxSolutions = maxSolutionsIn$.value;
+    render();
+}
+function onStartSolving() {
+    if (!state.sudoku) {
+        state.error = "No Sudoku loaded";
+        render();
+        return;
+    }
+    state.error = "Now solving ..";
+    render();
+}
+// 7 - init bindings
+maxSolutionsIn$.onchange = onMaxSolutionsSlider;
+startSolving$.onclick = onStartSolving;
 // 8 - initial render
 initGrid();
+resetState();
 render();
