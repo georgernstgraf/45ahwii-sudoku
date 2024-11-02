@@ -17,6 +17,8 @@
           rel="stylesheet">
     <script type="module"
             src="js/htmx.js"></script>
+    <script src="./js/chai.js"
+            type="module"></script>
     <script src="js/script.js"
             type="module"></script>
     <title>Sudoku</title>
@@ -33,11 +35,12 @@
             <div id="button-outer">
                 <div class="button-container  mx-2 border rounded border-2">
                     <button id="start-solving">Start Solving</button>
+                    <button id="stop-solving">Stop Solving</button>
                     <button id="watch-me-solve">Watch me solve</button>
                     <%- include('beispiele.html') %>
                     <div id="max-solves-slider">
                         <label for="max-solves-in"
-                               class="form-label">Stop after <span id="max-solves-out">0</span> Solutions</label>
+                               class="form-label">Stop after <span id="max-solves-out">0</span> found Solutions</label>
                         <input type="range"
                                class="form-range"
                                min="1"
