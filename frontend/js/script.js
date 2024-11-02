@@ -1,3 +1,4 @@
+import { Sudoku, Cell, colNames, rowNames, Grid } from './sudoku.js';
 // 1: State
 const state = { maxSolutions: 1 };
 // 2: State access and mod
@@ -19,10 +20,14 @@ function initGrid() {
     for (let i = 1; i <= 9; i++) {
         const subgrid = document.createElement("div");
         subgrid.classList.add("subgrid");
+        subgrid.classList.add("border");
+        subgrid.classList.add("border-2");
+        subgrid.classList.add("rounded-2");
         subgrid.id = "subgrid-" + i;
         for (let key of getSubGridKeys(i)) {
             const cell = document.createElement("div");
             cell.classList.add("grid-item");
+            cell.classList.add("border");
             cell.id = key;
             cell.textContent = key;
             subgrid.appendChild(cell);
@@ -65,7 +70,6 @@ const maxSolutionsIn$ = document.getElementById("max-solves-in");
 const maxSolutionsOut$ = document.getElementById("max-solves-out");
 const solvesCountOut$ = document.getElementById("solves-count-out");
 const startSolving$ = document.getElementById("start-solving");
-
 // 4 - dom node creation
 // 5 -render functions
 function render() {
@@ -89,7 +93,7 @@ function render() {
     }
     maxSolutionsOut$.innerText = state.maxSolutions;
 
-}
+};
 
 function displaySudoku(sudoku) {
     sudoku.renderInto(sudokuGrid$);
@@ -125,12 +129,24 @@ function onStartSolving() {
         return;
     }
     state.error = "Now solving ..";
+    try {
+        state.sudoku.solve();
+        state.error = "OK";
+    } catch (e) {
+        state.error = e.message;
+    }
     render();
 }
 // 7 - init bindings
 maxSolutionsIn$.onchange = onMaxSolutionsSlider;
 startSolving$.onclick = onStartSolving;
+beispieleSelect$.onchange = onSelectSudoku;
+
 // 8 - initial render
-initGrid();
-resetState();
-render();
+document.addEventListener('DOMContentLoaded', (event) => {
+    console.log('DOM fully loaded and parsed');
+    // Your initialization code here
+    initGrid();
+    resetState();
+    render();
+});

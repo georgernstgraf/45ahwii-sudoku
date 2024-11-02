@@ -5,8 +5,16 @@ class Sudoku {
     _maxSolutions;
     _data;
     _foundSolutions;
-    constructor({ data, recursionDepth, state }) {
-        this.grid = new Grid(data);
+    constructor(obj) {
+        if (obj instanceof Sudoku) {
+            // do the deep copies here
+            this.recursionDepth = obj.recursionDepth;
+            this.state = obj.state;  // no deep copy, carry it across
+            this.grid = new Grid(obj.grid);
+            return;
+        }
+        const { data, recursionDepth, state } = obj;
+        this.grid = new Grid({ data, recursionDepth });
         this.recursionDepth = recursionDepth;
         this.state = state;
     }
@@ -14,15 +22,15 @@ class Sudoku {
     solveObvious() {
         // so lange obviuos felder befüllen bis sich nix mehr tut
         // a) massimo  // TODO fehler in schleife
-        const countInital = this.grid.cellCount();
+        const countInital = this.grid.countSetCells();
         let countBefore = countInital;
         while (true) {
             doMassimos(); // grid befüllen mit new Cell()'s
-            const countAfter = this.grid.cellCount();
+            const countAfter = this.grid.countSetCells();
             if (countBefore === countAfter) break; // nix mehr zu holen
             countBefore = countAfter;
         }
-        const massimos = this.grid.cellCount() - countBefore;
+        const massimos = this.grid.countSetCells() - countBefore;
         if (massimos > 0) {
             console.log(
                 `Massimo found ${massimos} new values / depth: ${this.#recursion_depth
@@ -30,21 +38,21 @@ class Sudoku {
             );
         }
         // b) amin / andreas
-        countBefore = this.grid.cellCount();
+        countBefore = this.grid.countSetCells();
         while (true) {
             doAminAndreas(); // grid befüllen mit new Cell()'s
-            const countAfter = this.grid.cellCount();
+            const countAfter = this.grid.countSetCells();
             if (countBefore === countAfter) break; // nix mehr zu holen
             countBefore = countAfter;
         }
-        const aminadreas = this.grid.cellCount() - countBefore;
+        const aminadreas = this.grid.countSetCells() - countBefore;
         if (aminadreas > 0) {
             console.log(
                 `Amin / Andreas found ${aminadreas} new values / depth: ${this.#recursion_depth
                 }`
             );
         }
-        return this.grid.cellCount() - countInital;
+        return this.grid.countSetCells() - countInital;
     }
     makeAssumptions() {
         // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Iterators_and_generators
@@ -58,6 +66,13 @@ class Sudoku {
     // probiere für jede Annahme das Sudoku neu zu lösen
     solve() {
         if (this.grid.isFull()) {
+            if (!this.grid.isValid()) {
+                throw new Error("PANIC: Grid is full but invalid");
+            }
+            this.state.foundSolutions.push(this.deepCopy());
+            return;
+        }
+        if (this.grid.isFull()) {
             console.error(
                 "ERROR: Sudoku is already solved, but you called solve()."
             );
@@ -70,13 +85,6 @@ class Sudoku {
                 }`
             );
         }
-        if (this.grid.isFull()) {
-            if (!this.grid.isValid()) {
-                throw new Error("PANIC: Grid is full but invalid");
-            }
-            this.state.foundSolutions.push(this.grid);
-            return;
-        }
         this.makeAssumptions();
     }
     renderInto(domNode) {
@@ -85,46 +93,85 @@ class Sudoku {
         );
         for (let pos in this.grid.data) {
             const elt = domNode.querySelector(`#${pos}`);
-            elt.innerText = this.grid.data[pos];
+            elt.innerText = this.grid.data[pos].value;
             // elt.classList = "recursionDepth-" + this.recursionDepth; TODO data-recursion=3
         }
     }
 }
 class Cell {
-    constructor(position, value, recursionDepth, isAssumption) {
-        this.position = position; // zb "a1"
-        this.value = value; // zb 9
-        this.recursionDepth = recursionDepth; // beginnend mit 0
-        this.isAssumption = isAssumption;
+    constructor(par) {
+        Object.assign(this, par);
+        if (this.isAssumption == undefined) {
+            this.isAssumption = false;
+        }
     }
 }
 class Grid {
-    colNames = ["a", "b", "c", "d", "e", "f", "g", "h", "i"];
-    rowNames = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
-    constructor(obj) {
-        const data = {};
-        Object.assign(data, obj);
-        this.data = data;
+    constructor(par) {
+        if (par instanceof Grid) {
+            // need to return a copy
+            this.recursionDepth = par.recursionDepth;
+            this.data = {};
+            Object.keys(par.data).forEach(position => { this.data[position] = new Cell(par.data[position]); });
+            return;
+        }
+        const { recursionDepth, data } = par;
+        if (!(typeof recursionDepth == "number")) {
+            throw new Error(`RecursionDepth "${recursionDepth}" is not valid`);
+        }
+        this.recursionDepth = recursionDepth;
+        const newData = {};
+        for (let position in par.data) {
+            if (typeof position != "string" || position.length != 2 || !colNames.includes(position[0]) || !rowNames.includes(position[1])) {
+                throw new Error(`Position "${position}" is not valid`);
+            }
+            let value = par.data[position];
+            if (value instanceof Cell) {
+                newData[position] = value;
+                continue;
+            }
+            if (typeof value == "string") {
+                value = Number(value);
+            }
+            if (isNaN(value) || value < 1 || value > 9) {
+                throw new Error(`Number "${value}" at Position "${position}" is not valid`);
+            }
+            newData[position] = new Cell({ position, value, recursionDepth, isAssumption: false });
+        }
+        this.data = newData;
         if (!this.isValid()) {
             throw new Error("Invalid grid");
         }
     }
 
     setCell(position, value) {
-        if (!value instanceof Cell) {
+        if (!(value instanceof Cell)) {
             throw new Error("Value must be an instance of Cell");
         }
         this.data[position] = value;
     }
     allEmptyCellNames() {
-        // TODO #8
+        const keys = [];
+        for (let col of colNames) {
+            for (let row of rowNames) {
+                const key = `${col}${row}`;
+                if (!(key in this.data)) {
+                    keys.push(key);
+                }
+            }
+        }
+        return keys;
     }
     isFull() {
         return this.allEmptyCellNames().length === 0;
     }
-    cellCount() {
-        return Object.keys(this.data).length;
+    countSetCells() {
+        let count = 0;
+        Object.keys(this.data).forEach(k => {
+            count += this.data[k]?.value ? 1 : 0;
+        });
+        return count;
     }
 
     isValidRows() {
@@ -174,45 +221,52 @@ class Grid {
     }
 
     isValidSquare(num) {
-        const keys = getSubGridKeys(num);
-        for (let i = 0; i < keys.length; i++) {
-            const set = new Set();
-            for (let j = 0; j < keys.length; j++) {
-                const cell = keys[j];
-                if (this.data[cell] == undefined) continue;
-                if (set.has(this.data[cell])) return false;
-                set.add(this.data[cell]);
+        const keys = Grid.getSubGridKeys(num);
+        const values = new Set();
+        for (let k of keys) {
+            const value = this.data[k]?.value;
+            if (!value) {
+                return;
             }
+            if (values.has(value)) {
+                return false;
+            }
+            values.add(value);
+        }
+        return true;
+
+        for (let i = 0; i < keys.length; i++) {
+            const cell = keys[j];
+            if (this.data[cell] == undefined) continue;
+            if (values.has(this.data[cell])) return false;
+            values.add(this.data[cell]);
         }
         return true;
     }
-    getSubGridKeys(num) {
-        const col = ["a", "b", "c", "d", "e", "f", "g", "h", "i"];
-        const row = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-        num = num - 1;
-        let firstColIndex = (num % 3) * 3;
-        let firstRowIndex = Math.floor(num / 3) * 3;
-        let keys = [];
+    static getSubGridKeys(subGrid) {
+        const num = subGrid - 1;
+        const firstColIndex = (num % 3) * 3;
+        const firstRowIndex = Math.floor(num / 3) * 3;
+        const keys = [];
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
-                keys.push(col[firstColIndex + j] + row[firstRowIndex + i]);
+                keys.push(colNames[firstColIndex + j] + rowNames[firstRowIndex + i]);
             }
         }
-        // console.log(keys);
         return keys;
     }
 
     isValid() {
-        if (this.isValidRows() === false) {
+        if (!this.isValidRows()) {
             console.log("Rows are invalid");
 
             return false;
         }
-        if (this.isValidCols() === false) {
+        if (!this.isValidCols()) {
             console.log("Cols are invalid");
             return false;
         }
-        if (this.isValidSquares() === false) {
+        if (!this.isValidSquares()) {
             console.log("Squares are invalid");
             return false;
         }
@@ -220,12 +274,4 @@ class Grid {
         return true;
     }
 }
-
-const exportObj = { Sudoku, Cell, colNames, rowNames, Grid };
-if (typeof window != "undefined") {
-    for (let i in exportObj) {
-        window[i] = exportObj[i];
-    }
-}
-
 export { Sudoku, Cell, colNames, rowNames, Grid };
