@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width">
+    <title>Touch</title>
+</head>
+
+<body>
+    <div id="
+          touch"
+         style="margin:auto; background:red; border-radius: 25%; width: 200px; height: 200px; align-content: center; text-align: center;">
+        touch here
+    </div>
+    <script>
+        function addLongPressListener(element, callback, duration = 600) {
+            let timer;
+
+            element.addEventListener('touchstart', (e) => {
+                touch.style.background = "red";
+                touch.innerText = "start";
+                timer = setTimeout(() => {
+                    callback(e);
+                }, duration);
+            });
+
+            element.addEventListener('touchend', () => {
+                touch.innerText = "end";
+                clearTimeout(timer);
+            });
+
+            element.addEventListener('touchcancel', () => {
+                touch.innerText = "cancel";
+                clearTimeout(timer);
+            });
+        }
+        const touch = document.getElementById("touch");
+        const fn = function () {
+            touch.innerText = "YOU TOUCHED";
+            touch.style.background = "blue";
+        };
+        addLongPressListener(touch, fn)
+    </script>
+</body>
+
+</html>
