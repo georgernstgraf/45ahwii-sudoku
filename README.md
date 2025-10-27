@@ -1,4 +1,15 @@
-# 45ahwii-sudoku
+# SUDOKU SOLVER
+
+Derzeit recht buggy, leider ..
+
+Entstanden von ab Juni 2024 mit der damaligen 4AHWII, welche dann im Sommer 25 als 5AHWII maturiert hat.
+
+(meine erste SWP Maturaklasse)
+
+## Tech-Stack
+
+- Frontend: vanilla css und js
+- Backend: Node mit Express
 
 ## Aufgaben Teilung
 

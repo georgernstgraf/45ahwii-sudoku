@@ -1,7 +1,6 @@
-"use strict";
 import * as path from "node:path";
 import express from "npm:express";
-import * as ejs from 'npm:ejs';
+import * as ejs from "npm:ejs";
 import { router as beispieleJSON } from "./routes/beispieleJSON-router.js";
 import { router as beispieleTXT } from "./routes/beispieleTXT-router.js";
 import { beispiele } from "./lib/beispiele-list.js";
@@ -24,7 +23,7 @@ app.get(["/", "/index.html"], async (req, res) => {
 });
 
 app.use("/beispieleJSON", beispieleJSON);
-app.use('/beispieleTXT', beispieleTXT);
+app.use("/beispieleTXT", beispieleTXT);
 app.use("", express.static("./frontend"));
 // Error handlers als Letzte
 app.use(function fourOhFourHandler(req, res) {
@@ -42,6 +41,6 @@ app.listen(1234, "0.0.0.0", function (err) {
 	}
 
 	console.log(
-		`Started ${new Date().toLocaleTimeString()} http://localhost:1234`
+		`Started ${new Date().toLocaleTimeString()} http://localhost:1234`,
 	);
 });
